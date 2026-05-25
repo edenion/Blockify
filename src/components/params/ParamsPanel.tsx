@@ -5,6 +5,7 @@ import { PresetSelector } from './PresetSelector';
 import { QuantizeModeSelector } from './QuantizeModeSelector';
 import { MaskInvertToggle } from './MaskInvertToggle';
 import { CustomPaletteEditor } from './CustomPaletteEditor';
+import { CustomPresetManager } from './CustomPresetManager';
 
 function CompareControl() {
   const { showCompare, compareMode } = useAppStore((s) => s.ui);
@@ -61,6 +62,7 @@ export function ParamsPanel() {
       <AlgorithmToggle />
       <QuantizeModeSelector />
       <PresetSelector />
+      <CustomPresetManager />
       <MaskInvertToggle />
       <CustomPaletteEditor />
       <CompareControl />

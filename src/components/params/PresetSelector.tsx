@@ -7,6 +7,7 @@ export function PresetSelector() {
   const presetId = useAppStore((s) => s.presetId);
   const setPresetId = useAppStore((s) => s.setPresetId);
   const setParams = useAppStore((s) => s.setParams);
+  const customPresets = useAppStore((s) => s.customPresets);
 
   const hardwarePresets = registry.getByCategory('hardware');
   const themePresets = registry.getByCategory('theme');
@@ -16,14 +17,27 @@ export function PresetSelector() {
       setPresetId(null);
       return;
     }
-    const preset = registry.get(id);
-    if (preset) {
+    const builtIn = registry.get(id);
+    if (builtIn) {
       setParams({
-        blockSize: preset.config.downsample.blockSize,
-        algorithm: preset.config.downsample.algorithm,
+        blockSize: builtIn.config.downsample.blockSize,
+        algorithm: builtIn.config.downsample.algorithm,
+        quantizeMethod: builtIn.config.quantize.method,
+        maxColors: builtIn.config.quantize.maxColors ?? 16,
       });
+      setPresetId(id);
+      return;
     }
-    setPresetId(id);
+    const custom = customPresets.find((p) => p.id === id);
+    if (custom) {
+      setParams({
+        blockSize: custom.config.downsample.blockSize,
+        algorithm: custom.config.downsample.algorithm,
+        quantizeMethod: custom.config.quantize.method,
+        maxColors: custom.config.quantize.maxColors ?? 16,
+      });
+      setPresetId(id);
+    }
   };
 
   return (
@@ -71,6 +85,29 @@ export function PresetSelector() {
           ))}
         </div>
       </div>
+
+      {customPresets.length > 0 && (
+        <div>
+          <h4 className="text-[10px] text-retro-muted font-terminal mb-2 uppercase tracking-wider">
+            Custom
+          </h4>
+          <div className="grid grid-cols-2 gap-2">
+            {customPresets.map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => handleSelect(preset.id)}
+                className={`py-2 px-2 text-[10px] font-terminal border transition-colors text-left ${
+                  presetId === preset.id
+                    ? 'border-retro-primary bg-retro-primary/10 text-retro-primary'
+                    : 'border-retro-border text-retro-muted hover:border-retro-text hover:text-retro-text'
+                }`}
+              >
+                {preset.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {presetId && (
         <button

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import type { QuantizeMethod, RGB } from '../engine/types';
+import type { Preset } from '../engine/presets/registry';
+import { loadCustomPresets, saveCustomPresets } from './storage';
 
 export type Algorithm = 'nearest' | 'average';
 
@@ -25,6 +27,11 @@ export interface AppState {
   customPalette: RGB[];
   addCustomPaletteColor: (color: RGB) => void;
   removeCustomPaletteColor: (index: number) => void;
+
+  // Custom presets
+  customPresets: Preset[];
+  addCustomPreset: (preset: Preset) => void;
+  removeCustomPreset: (id: string) => void;
 
   // Compare
   ui: {
@@ -75,6 +82,20 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       customPalette: state.customPalette.filter((_, i) => i !== index),
     })),
+
+  customPresets: loadCustomPresets(),
+  addCustomPreset: (preset) =>
+    set((state) => {
+      const next = [...state.customPresets, preset];
+      saveCustomPresets(next);
+      return { customPresets: next };
+    }),
+  removeCustomPreset: (id) =>
+    set((state) => {
+      const next = state.customPresets.filter((p) => p.id !== id);
+      saveCustomPresets(next);
+      return { customPresets: next };
+    }),
 
   ui: {
     showCompare: false,
