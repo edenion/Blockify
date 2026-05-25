@@ -3,8 +3,13 @@ import { UploadZone } from './UploadZone';
 import { ImageCanvas } from './ImageCanvas';
 import { SplitView } from '../compare/SplitView';
 import { SliderCompare } from '../compare/SliderCompare';
+import type { SelectionTool } from './SelectionOverlay';
 
-export function CanvasViewport() {
+interface CanvasViewportProps {
+  selectionTool?: SelectionTool;
+}
+
+export function CanvasViewport({ selectionTool }: CanvasViewportProps) {
   const originalImage = useAppStore((s) => s.originalImage);
   const { showCompare, compareMode } = useAppStore((s) => s.ui);
 
@@ -26,7 +31,7 @@ export function CanvasViewport() {
 
   return (
     <div className="flex-1 bg-retro-bg flex items-center justify-center p-4 overflow-auto">
-      <ImageCanvas />
+      <ImageCanvas selectionTool={selectionTool} />
     </div>
   );
 }

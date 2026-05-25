@@ -1,18 +1,27 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../../store';
 import { processImage } from '../../engine';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
+import { createMask, applyMask } from '../../engine/selection/mask';
+import type { Shape } from '../../engine/selection/shapes';
 import type { ProcessOptions } from '../../engine/types';
+import { SelectionOverlay } from './SelectionOverlay';
+import type { SelectionTool } from './SelectionOverlay';
 
 const registry = createPresetRegistry();
 
-export function ImageCanvas() {
+interface ImageCanvasProps {
+  selectionTool?: SelectionTool;
+}
+
+export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalImage = useAppStore((s) => s.originalImage);
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
+  const [shape, setShape] = useState<Shape | null>(null);
 
   useEffect(() => {
     if (!originalImage || !canvasRef.current) return;
@@ -38,7 +47,13 @@ export function ImageCanvas() {
         }
       }
 
-      const result = processImage(sourceData, options);
+      let result = processImage(sourceData, options);
+
+      // Apply selection mask if shape exists
+      if (shape) {
+        const mask = createMask(shape, sourceData.width, sourceData.height, false);
+        result = applyMask(sourceData, result, mask);
+      }
 
       const resultCanvas = imageDataToCanvas(result);
       const canvas = canvasRef.current!;
@@ -50,15 +65,23 @@ export function ImageCanvas() {
 
       setIsProcessing(false);
     });
-  }, [originalImage, params, presetId, setIsProcessing]);
+  }, [originalImage, params, presetId, setIsProcessing, shape]);
 
   if (!originalImage) return null;
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="max-w-full max-h-full object-contain"
-      style={{ imageRendering: 'pixelated' }}
-    />
+    <div className="relative inline-block">
+      <canvas
+        ref={canvasRef}
+        className="max-w-full max-h-full object-contain"
+        style={{ imageRendering: 'pixelated' }}
+      />
+      <SelectionOverlay
+        width={originalImage.naturalWidth}
+        height={originalImage.naturalHeight}
+        tool={selectionTool ?? null}
+        onShapeCreated={setShape}
+      />
+    </div>
   );
 }
