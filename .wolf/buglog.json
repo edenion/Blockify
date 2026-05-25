@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-05-25T04:41:40.378Z",
+      "error_message": "ImageData is not defined in vitest/jsdom environment",
+      "file": "tests/engine/algorithms/downsample.test.ts",
+      "root_cause": "jsdom does not provide the ImageData global; it is a browser API not included in jsdom",
+      "fix": "Installed `canvas` package (npm install -D canvas) and polyfilled ImageData in tests/setup.ts: `import { ImageData } from 'canvas'; global.ImageData = ImageData;`",
+      "tags": [
+        "testing",
+        "jsdom",
+        "ImageData",
+        "canvas"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T04:41:40.378Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-05-25T04:44:30.015Z",
+      "error_message": "Incorrect value in code",
+      "file": "tests/utils/color.test.ts",
+      "root_cause": "Had '../../../src/utils/color'",
+      "fix": "Changed to '../../src/utils/color'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T04:44:30.015Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-05-25T04:58:33.150Z",
+      "error_message": "CSS fix: quantize",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "quantize: { method: 'none' as const → { method: 'none'",
+      "fix": "Changed quantize: { method: 'none' as const → { method: 'none'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T04:58:33.150Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-05-25T04:59:33.010Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/utils/image.ts",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 8→15 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T04:59:33.010Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-05-25T05:23:20.780Z",
+      "error_message": "CSS fix: quantize",
+      "file": "src/components/toolbar/ExportButton.tsx",
+      "root_cause": "quantize: { method: 'none' as const → { method: 'none'",
+      "fix": "Changed quantize: { method: 'none' as const → { method: 'none'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:23:20.780Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-05-25T05:28:50.626Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 64→87 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:28:50.626Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-05-25T05:29:10.601Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/App.tsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 16→21 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:29:10.601Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-25T05:29:34.376Z",
+      "error_message": "CSS fix: e",
+      "file": "src/components/canvas/SelectionOverlay.tsx",
+      "root_cause": "e: React.MouseEvent) => { → React.MouseEvent<HTMLCanvasElement>) => {",
+      "fix": "Changed e: React.MouseEvent) => { → React.MouseEvent<HTMLCanvasElement>) => {",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:29:34.376Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-05-25T05:29:38.291Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:29:38.291Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-05-25T05:39:53.417Z",
+      "error_message": "Type error",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:39:53.417Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-25T05:40:10.916Z",
+      "error_message": "Type error",
+      "file": "src/store/index.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:40:10.916Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-25T05:40:23.254Z",
+      "error_message": "CSS fix: method",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "method: quantizeMethod, → params.quantizeMethod,",
+      "fix": "Changed method: quantizeMethod, → params.quantizeMethod,",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T05:40:23.254Z"
+    }
+  ]
+}
