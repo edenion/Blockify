@@ -20,6 +20,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const originalImage = useAppStore((s) => s.originalImage);
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
+  const customPalette = useAppStore((s) => s.customPalette);
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
   const invert = useAppStore((s) => s.selection.invert);
   const [shape, setShape] = useState<Shape | null>(null);
@@ -49,6 +50,14 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
             quantize: preset.config.quantize,
           };
         }
+      } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
+        options = {
+          ...options,
+          quantize: {
+            method: 'fixed-palette',
+            palette: customPalette,
+          },
+        };
       }
 
       let result = processImage(sourceData, options);
@@ -69,7 +78,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
       setIsProcessing(false);
     });
-  }, [originalImage, params, presetId, setIsProcessing, shape, invert]);
+  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert]);
 
   if (!originalImage) return null;
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { QuantizeMethod } from '../engine/types';
+import type { QuantizeMethod, RGB } from '../engine/types';
 
 export type Algorithm = 'nearest' | 'average';
 
@@ -20,6 +20,11 @@ export interface AppState {
   // Preset
   presetId: string | null;
   setPresetId: (id: string | null) => void;
+
+  // Custom palette
+  customPalette: RGB[];
+  addCustomPaletteColor: (color: RGB) => void;
+  removeCustomPaletteColor: (index: number) => void;
 
   // Compare
   ui: {
@@ -57,6 +62,19 @@ export const useAppStore = create<AppState>((set) => ({
 
   presetId: null,
   setPresetId: (id) => set({ presetId: id }),
+
+  customPalette: [],
+  addCustomPaletteColor: (color) =>
+    set((state) => ({
+      customPalette:
+        state.customPalette.length < 32
+          ? [...state.customPalette, color]
+          : state.customPalette,
+    })),
+  removeCustomPaletteColor: (index) =>
+    set((state) => ({
+      customPalette: state.customPalette.filter((_, i) => i !== index),
+    })),
 
   ui: {
     showCompare: false,
