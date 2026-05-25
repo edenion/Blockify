@@ -56,7 +56,7 @@ function isPointInShape(x: number, y: number, shape: Shape): boolean {
     }
     case 'freehand': {
       const ctx = getCanvasContext();
-      buildPath(ctx, shape.path, false);
+      buildPath(ctx, shape.path, true);
       return ctx.isPointInPath(x, y);
     }
   }
