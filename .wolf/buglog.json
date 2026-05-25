@@ -673,6 +673,54 @@
       "related_bugs": [],
       "occurrences": 2,
       "last_seen": "2026-05-25T08:33:33.554Z"
+    },
+    {
+      "id": "bug-043",
+      "timestamp": "2026-05-25T08:39:52.218Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/prd/2026-05-25-像素风图片转换.md",
+      "root_cause": "17 lines replaced/restructured",
+      "fix": "Rewrote 22→37 lines (17 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:39:52.218Z"
+    },
+    {
+      "id": "bug-044",
+      "timestamp": "2026-05-25T08:40:22.221Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/specs/2026-05-25-技术设计.md",
+      "root_cause": "12 lines replaced/restructured",
+      "fix": "Rewrote 47→68 lines (12 removed) | Also: - `HistorySnapshot` 保存：params、selection、presetId、p; - `saveSnapshot()` 在关键交互点调用（滑块释放、模式切换、预设选择等）",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-25T08:41:54.945Z"
+    },
+    {
+      "id": "bug-045",
+      "timestamp": "2026-05-25T08:41:54.825Z",
+      "error_message": "Incorrect value in code",
+      "file": "docs/specs/2026-05-25-技术设计.md",
+      "root_cause": "Had `globalCompositeOperation`",
+      "fix": "Changed to `Uint8Array`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:41:54.825Z"
     }
   ]
 }

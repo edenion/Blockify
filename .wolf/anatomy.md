@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T08:33:33.546Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T08:41:54.936Z
 > Files: 94 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -43,11 +43,11 @@
 
 ## docs/prd/
 
-- `2026-05-25-像素风图片转换.md` — PixelArt Studio — 产品需求文档 (PRD) (~7066 tok)
+- `2026-05-25-像素风图片转换.md` — PixelArt Studio — 产品需求文档 (PRD) (~7152 tok)
 
 ## docs/specs/
 
-- `2026-05-25-技术设计.md` — PixelArt Studio — 设计文档 (~4166 tok)
+- `2026-05-25-技术设计.md` — PixelArt Studio — 设计文档 (~4238 tok)
 
 ## src/
 
