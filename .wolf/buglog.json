@@ -193,6 +193,166 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-25T05:40:23.254Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-05-25T06:21:58.424Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/engine/selection/shapes.ts",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 38→56 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:21:58.424Z"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-05-25T06:25:00.027Z",
+      "error_message": "Missing guard clause",
+      "file": "src/engine/selection/mask.ts",
+      "root_cause": "No early return/throw for edge case: !cachedCanvas",
+      "fix": "Added guard clause: if (!cachedCanvas)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:25:00.027Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-05-25T06:30:03.403Z",
+      "error_message": "Wrong reference: null should be polygon",
+      "file": "src/App.tsx",
+      "root_cause": "Used \"null\" instead of \"polygon\"",
+      "fix": "Changed null → polygon",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:30:03.403Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-05-25T06:30:03.507Z",
+      "error_message": "CSS fix: null",
+      "file": "src/components/toolbar/Toolbar.tsx",
+      "root_cause": "null: 'circle') → t.id)",
+      "fix": "Changed null: 'circle') → t.id)",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:30:03.507Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-05-25T06:40:26.476Z",
+      "error_message": "CSS fix: quantize",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "quantize: preset.config.quantize, → {",
+      "fix": "Changed quantize: preset.config.quantize, → {",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:40:26.476Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-05-25T06:40:45.715Z",
+      "error_message": "Wrong reference: CompareControl should be CustomPaletteEditor",
+      "file": "src/components/params/ParamsPanel.tsx",
+      "root_cause": "Used \"CompareControl\" instead of \"CustomPaletteEditor\"",
+      "fix": "Changed CompareControl → CustomPaletteEditor",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:40:45.716Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-05-25T06:55:29.893Z",
+      "error_message": "Type error",
+      "file": "src/components/params/PersonModeSelector.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:55:29.893Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-05-25T06:56:31.636Z",
+      "error_message": "Missing await",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:56:31.636Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-05-25T06:56:49.967Z",
+      "error_message": "Wrong reference: maskData should be mask",
+      "file": "src/engine/person/cutout.ts",
+      "root_cause": "Used \"maskData\" instead of \"mask\"",
+      "fix": "Changed maskData → mask",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:56:49.967Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-05-25T06:57:07.341Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "src/engine/person/cutout.ts",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T06:57:07.341Z"
     }
   ]
 }

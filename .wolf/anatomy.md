@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T05:40:23.243Z
-> Files: 75 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T06:57:07.332Z
+> Files: 85 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -10,7 +10,7 @@
 - `index.html` — PixelArt Studio (~82 tok)
 - `package.json` — Node.js package manifest (~215 tok)
 - `postcss.config.js` (~24 tok)
-- `README.md` — Project documentation (~206 tok)
+- `README.md` — Project documentation (~192 tok)
 - `tailwind.config.ts` — /*.{ts,tsx}'], (~176 tok)
 - `tsconfig.json` — TypeScript configuration (~172 tok)
 - `tsconfig.node.json` (~61 tok)
@@ -39,6 +39,7 @@
 ## docs/plans/
 
 - `2026-05-25-像素风图片转换-phase1.md` — PixelArt Studio Phase 1 实现计划 (~20240 tok)
+- `2026-05-25-像素风图片转换-phase2.md` — PixelArt Studio Phase 2 实现计划 (~24857 tok)
 
 ## docs/prd/
 
@@ -50,7 +51,7 @@
 
 ## src/
 
-- `App.tsx` — App (~182 tok)
+- `App.tsx` — App (~189 tok)
 - `index.css` — Styles: 5 rules (~81 tok)
 - `main.tsx` (~66 tok)
 
@@ -61,8 +62,8 @@
 ## src/components/canvas/
 
 - `CanvasViewport.tsx` — CanvasViewport (~313 tok)
-- `ImageCanvas.tsx` — registry (~833 tok)
-- `SelectionOverlay.tsx` — SelectionOverlay (~1144 tok)
+- `ImageCanvas.tsx` — registry (~1123 tok)
+- `SelectionOverlay.tsx` — SelectionOverlay (~2637 tok)
 - `UploadZone.tsx` — ALLOWED_TYPES (~579 tok)
 
 ## src/components/compare/
@@ -89,15 +90,19 @@
 ## src/components/params/
 
 - `AlgorithmToggle.tsx` — 降采样算法切换（Nearest / Average） (~328 tok)
-- `BlockSizeSlider.tsx` — BlockSizeSlider (~471 tok)
-- `ParamsPanel.tsx` — CompareControl (~653 tok)
-- `PresetSelector.tsx` — registry (~807 tok)
-- `QuantizeModeSelector.tsx` — QuantizeModeSelector (~625 tok)
+- `BlockSizeSlider.tsx` — 像素块大小滑块（2~64px），带150ms防抖 (~471 tok)
+- `CustomPaletteEditor.tsx` — rgbToHex (~728 tok)
+- `CustomPresetManager.tsx` — CustomPresetManager (~1474 tok)
+- `MaskInvertToggle.tsx` — 反向选区开关，切换选区内/外像素化 (~266 tok)
+- `ParamsPanel.tsx` — CompareControl (~754 tok)
+- `PersonModeSelector.tsx` — modes (~961 tok)
+- `PresetSelector.tsx` — registry (~1215 tok)
+- `QuantizeModeSelector.tsx` — 颜色量化模式切换（None/Median/Fixed），Median模式可调最大颜色数 (~625 tok)
 
 ## src/components/toolbar/
 
 - `ExportButton.tsx` — 导出按钮：处理原图并下载 PNG (~525 tok)
-- `Toolbar.tsx` — Toolbar (~521 tok)
+- `Toolbar.tsx` — TOOLS (~412 tok)
 
 ## src/engine/
 
@@ -114,6 +119,11 @@
 
 - `png.ts` — downloadPNG：将 Canvas 转为 PNG 并触发下载 (~72 tok)
 - `png.ts` — Exports downloadPNG (~72 tok)
+
+## src/engine/person/
+
+- `cutout.ts` — Exports processCutout (~809 tok)
+- `normal.ts` — Exports processNormal (~64 tok)
 
 ## src/engine/presets/
 
@@ -136,12 +146,13 @@
 
 ## src/engine/selection/
 
-- `mask.ts` — Exports createMask, applyMask (~388 tok)
-- `shapes.ts` — Exports ShapeType, Point, Rectangle, Circle + 3 more (~250 tok)
+- `mask.ts` — Exports createMask, applyMask (~670 tok)
+- `shapes.ts` — Exports ShapeType, Point, Rectangle, Circle + 7 more (~358 tok)
 
 ## src/store/
 
-- `index.ts` — Exports Algorithm, AppState, useAppStore (~476 tok)
+- `index.ts` — Exports Algorithm, PersonMode, AppState, useAppStore (~1060 tok)
+- `storage.ts` — Exports loadCustomPresets, saveCustomPresets (~170 tok)
 
 ## src/utils/
 
@@ -165,6 +176,11 @@
 ## tests/engine/presets/
 
 - `registry.test.ts` — API routes: GET (1 endpoints) (~526 tok)
+
+## tests/engine/selection/
+
+- `mask.test.ts` — Declares createImageData (~881 tok)
+- `shapes.test.ts` — Declares rect (~502 tok)
 
 ## tests/store/
 

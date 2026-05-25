@@ -33,6 +33,8 @@
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
 
+[2026-05-25] 添加新参数到 UI 组件前，先更新 store 的类型定义。QuantizeModeSelector 和 ImageCanvas 引用 `params.quantizeMethod` 和 `params.maxColors` 时 TS 报错，因为 store 的 `params` 类型只定义了 `blockSize` 和 `algorithm`。修复：先在 `src/store/index.ts` 的 `AppState.params` 中添加新字段，再移除组件中的 `as` 类型断言。
+
 ## Key Learnings
 
 - **Testing ImageData in Node.js**: jsdom does not provide `ImageData` global. Must install `canvas` package (`npm install -D canvas`) and polyfill in `tests/setup.ts`: `import { ImageData } from 'canvas'; global.ImageData = ImageData;`

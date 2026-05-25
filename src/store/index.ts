@@ -52,6 +52,12 @@ export interface AppState {
   personMode: PersonMode;
   setPersonMode: (mode: PersonMode) => void;
 
+  // Cutout options
+  cutoutBg: 'keep' | 'pixelate' | 'color';
+  cutoutBgColor: string;
+  setCutoutBg: (bg: 'keep' | 'pixelate' | 'color') => void;
+  setCutoutBgColor: (color: string) => void;
+
   // Processing state
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
@@ -125,6 +131,11 @@ export const useAppStore = create<AppState>((set) => ({
 
   personMode: null,
   setPersonMode: (mode) => set({ personMode: mode }),
+
+  cutoutBg: 'keep',
+  cutoutBgColor: '#0f172a',
+  setCutoutBg: (bg) => set({ cutoutBg: bg }),
+  setCutoutBgColor: (color) => set({ cutoutBgColor: color }),
 
   isProcessing: false,
   setIsProcessing: (processing) => set({ isProcessing: processing }),

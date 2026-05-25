@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../../store';
 import { processImage } from '../../engine';
 import { processNormal } from '../../engine/person/normal';
+import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
 import { createMask, applyMask } from '../../engine/selection/mask';
@@ -25,6 +26,8 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
   const invert = useAppStore((s) => s.selection.invert);
   const personMode = useAppStore((s) => s.personMode);
+  const cutoutBg = useAppStore((s) => s.cutoutBg);
+  const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
   const [shape, setShape] = useState<Shape | null>(null);
 
   useEffect(() => {
@@ -32,8 +35,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
     setIsProcessing(true);
 
-    // Use requestAnimationFrame for non-blocking processing
-    requestAnimationFrame(() => {
+    const process = async () => {
       const sourceData = imageToImageData(originalImage);
 
       let options: ProcessOptions = {
@@ -63,7 +65,9 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
       }
 
       let result: ImageData;
-      if (personMode === 'normal') {
+      if (personMode === 'cutout') {
+        result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+      } else if (personMode === 'normal') {
         result = processNormal(sourceData, options);
       } else {
         // Fallback for now — other modes will be implemented in later tasks
@@ -85,8 +89,10 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
       ctx.drawImage(resultCanvas, 0, 0);
 
       setIsProcessing(false);
-    });
-  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert, personMode]);
+    };
+
+    process();
+  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert, personMode, cutoutBg, cutoutBgColor]);
 
   if (!originalImage) return null;
 
