@@ -18,6 +18,8 @@ export interface AppState {
   // Image
   originalImage: HTMLImageElement | null;
   setOriginalImage: (image: HTMLImageElement | null) => void;
+  thumbnailImage: HTMLCanvasElement | null;
+  setThumbnailImage: (canvas: HTMLCanvasElement | null) => void;
 
   // Params
   params: {
@@ -105,6 +107,8 @@ function getSnapshot(state: AppState): HistorySnapshot {
 export const useAppStore = create<AppState>((set) => ({
   originalImage: null,
   setOriginalImage: (image) => set({ originalImage: image }),
+  thumbnailImage: null,
+  setThumbnailImage: (canvas) => set({ thumbnailImage: canvas }),
 
   params: {
     blockSize: 8,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAppStore } from '../../store';
 import { processStyle } from '../../engine/person/style';
 import { processCutout } from '../../engine/person/cutout';
@@ -20,6 +20,7 @@ interface ImageCanvasProps {
 export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalImage = useAppStore((s) => s.originalImage);
+  const thumbnailImage = useAppStore((s) => s.thumbnailImage);
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
   const customPalette = useAppStore((s) => s.customPalette);
@@ -30,71 +31,99 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
   const [shape, setShape] = useState<Shape | null>(null);
   const { process: processInWorker } = usePixelEngine();
+  const hqTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const processWithSource = useCallback(async (source: HTMLImageElement | HTMLCanvasElement) => {
+    if (!canvasRef.current) return;
+
+    const sourceData = source instanceof HTMLImageElement
+      ? imageToImageData(source)
+      : source.getContext('2d')!.getImageData(0, 0, source.width, source.height);
+
+    let options: ProcessOptions = {
+      downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
+      quantize: {
+        method: params.quantizeMethod,
+        maxColors: params.maxColors,
+      },
+    };
+
+    if (presetId) {
+      const preset = registry.get(presetId);
+      if (preset) {
+        options = {
+          downsample: preset.config.downsample,
+          quantize: preset.config.quantize,
+        };
+      }
+    } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
+      options = {
+        ...options,
+        quantize: {
+          method: 'fixed-palette',
+          palette: customPalette,
+        },
+      };
+    }
+
+    let result: ImageData;
+    if (personMode === 'cutout') {
+      result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+    } else if (personMode === 'style') {
+      result = processStyle(sourceData, options);
+    } else if (personMode === 'normal') {
+      result = await processInWorker(sourceData, options);
+    } else {
+      result = await processInWorker(sourceData, options);
+    }
+
+    if (shape) {
+      const mask = createMask(shape, sourceData.width, sourceData.height, invert);
+      result = applyMask(sourceData, result, mask);
+    }
+
+    const resultCanvas = imageDataToCanvas(result);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d')!;
+
+    canvas.width = resultCanvas.width;
+    canvas.height = resultCanvas.height;
+    ctx.drawImage(resultCanvas, 0, 0);
+  }, [params, presetId, customPalette, personMode, cutoutBg, cutoutBgColor, shape, invert, processInWorker]);
 
   useEffect(() => {
     if (!originalImage || !canvasRef.current) return;
 
     setIsProcessing(true);
 
-    const process = async () => {
-      const sourceData = imageToImageData(originalImage);
+    // Use thumbnail for quick preview, fallback to original if no thumbnail
+    const source = thumbnailImage || originalImage;
 
-      let options: ProcessOptions = {
-        downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
-        quantize: {
-          method: params.quantizeMethod,
-          maxColors: params.maxColors,
-        },
-      };
+    requestAnimationFrame(() => {
+      processWithSource(source).then(() => {
+        setIsProcessing(false);
 
-      if (presetId) {
-        const preset = registry.get(presetId);
-        if (preset) {
-          options = {
-            downsample: preset.config.downsample,
-            quantize: preset.config.quantize,
-          };
+        // Schedule high-quality render with original image after 500ms of no changes
+        if (hqTimeoutRef.current) {
+          clearTimeout(hqTimeoutRef.current);
         }
-      } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
-        options = {
-          ...options,
-          quantize: {
-            method: 'fixed-palette',
-            palette: customPalette,
-          },
-        };
+        hqTimeoutRef.current = setTimeout(() => {
+          if (thumbnailImage && canvasRef.current) {
+            setIsProcessing(true);
+            processWithSource(originalImage).then(() => {
+              setIsProcessing(false);
+            });
+          }
+        }, 500);
+      });
+    });
+
+    return () => {
+      if (hqTimeoutRef.current) {
+        clearTimeout(hqTimeoutRef.current);
       }
-
-      let result: ImageData;
-      if (personMode === 'cutout') {
-        result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
-      } else if (personMode === 'style') {
-        result = processStyle(sourceData, options);
-      } else if (personMode === 'normal') {
-        result = await processInWorker(sourceData, options);
-      } else {
-        result = await processInWorker(sourceData, options);
-      }
-
-      // Apply selection mask if shape exists
-      if (shape) {
-        const mask = createMask(shape, sourceData.width, sourceData.height, invert);
-        result = applyMask(sourceData, result, mask);
-      }
-
-      const resultCanvas = imageDataToCanvas(result);
-      const canvas = canvasRef.current!;
-      const ctx = canvas.getContext('2d')!;
-
-      canvas.width = resultCanvas.width;
-      canvas.height = resultCanvas.height;
-      ctx.drawImage(resultCanvas, 0, 0);
-
-      setIsProcessing(false);
     };
-
-    process();
-  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert, personMode, cutoutBg, cutoutBgColor]);
+  }, [originalImage, thumbnailImage, processWithSource, setIsProcessing]);
 
   if (!originalImage) return null;
 
