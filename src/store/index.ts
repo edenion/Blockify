@@ -29,6 +29,12 @@ export interface AppState {
   setCompareMode: (show: boolean) => void;
   setCompareType: (mode: 'split' | 'slider') => void;
 
+  // Selection
+  selection: {
+    invert: boolean;
+  };
+  setSelectionInvert: (invert: boolean) => void;
+
   // Processing state
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
@@ -63,6 +69,14 @@ export const useAppStore = create<AppState>((set) => ({
   setCompareType: (mode) =>
     set((state) => ({
       ui: { ...state.ui, compareMode: mode },
+    })),
+
+  selection: {
+    invert: false,
+  },
+  setSelectionInvert: (invert) =>
+    set((state) => ({
+      selection: { ...state.selection, invert },
     })),
 
   isProcessing: false,

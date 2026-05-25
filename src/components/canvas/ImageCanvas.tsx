@@ -21,6 +21,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
+  const invert = useAppStore((s) => s.selection.invert);
   const [shape, setShape] = useState<Shape | null>(null);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
       // Apply selection mask if shape exists
       if (shape) {
-        const mask = createMask(shape, sourceData.width, sourceData.height, false);
+        const mask = createMask(shape, sourceData.width, sourceData.height, invert);
         result = applyMask(sourceData, result, mask);
       }
 
@@ -68,7 +69,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
       setIsProcessing(false);
     });
-  }, [originalImage, params, presetId, setIsProcessing, shape]);
+  }, [originalImage, params, presetId, setIsProcessing, shape, invert]);
 
   if (!originalImage) return null;
 
