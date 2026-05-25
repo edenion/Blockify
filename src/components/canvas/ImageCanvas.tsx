@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../../store';
-import { processImage } from '../../engine';
-import { processNormal } from '../../engine/person/normal';
 import { processStyle } from '../../engine/person/style';
 import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
@@ -11,6 +9,7 @@ import type { Shape } from '../../engine/selection/shapes';
 import type { ProcessOptions } from '../../engine/types';
 import { SelectionOverlay } from './SelectionOverlay';
 import type { SelectionTool } from './SelectionOverlay';
+import { usePixelEngine } from '../../hooks/usePixelEngine';
 
 const registry = createPresetRegistry();
 
@@ -30,6 +29,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const cutoutBg = useAppStore((s) => s.cutoutBg);
   const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
   const [shape, setShape] = useState<Shape | null>(null);
+  const { process: processInWorker } = usePixelEngine();
 
   useEffect(() => {
     if (!originalImage || !canvasRef.current) return;
@@ -71,9 +71,9 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
       } else if (personMode === 'style') {
         result = processStyle(sourceData, options);
       } else if (personMode === 'normal') {
-        result = processNormal(sourceData, options);
+        result = await processInWorker(sourceData, options);
       } else {
-        result = processImage(sourceData, options);
+        result = await processInWorker(sourceData, options);
       }
 
       // Apply selection mask if shape exists
