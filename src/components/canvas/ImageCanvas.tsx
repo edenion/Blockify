@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useAppStore } from '../../store';
 import { processStyle } from '../../engine/person/style';
 import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
 import { createMask, applyMask } from '../../engine/selection/mask';
-import type { Shape } from '../../engine/selection/shapes';
 import type { ProcessOptions } from '../../engine/types';
 import { SelectionOverlay } from './SelectionOverlay';
 import type { SelectionTool } from './SelectionOverlay';
@@ -26,10 +25,11 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const customPalette = useAppStore((s) => s.customPalette);
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
   const invert = useAppStore((s) => s.selection.invert);
+  const shape = useAppStore((s) => s.selection.shape);
+  const setSelectionShape = useAppStore((s) => s.setSelectionShape);
   const personMode = useAppStore((s) => s.personMode);
   const cutoutBg = useAppStore((s) => s.cutoutBg);
   const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
-  const [shape, setShape] = useState<Shape | null>(null);
   const { process: processInWorker } = usePixelEngine();
   const hqTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -138,7 +138,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
         width={originalImage.naturalWidth}
         height={originalImage.naturalHeight}
         tool={selectionTool ?? null}
-        onShapeCreated={setShape}
+        onShapeCreated={setSelectionShape}
       />
     </div>
   );

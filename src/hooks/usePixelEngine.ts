@@ -11,6 +11,10 @@ function getWorker(): Worker | null {
       workerInstance = new Worker(new URL('../engine/worker.ts', import.meta.url), {
         type: 'module',
       });
+      workerInstance.addEventListener('error', () => {
+        workerInstance?.terminate();
+        workerInstance = null;
+      });
     } catch {
       return null;
     }

@@ -1,8 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useAppStore } from '../../store';
 import { processImage } from '../../engine';
+import { processStyle } from '../../engine/person/style';
+import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
+import { createMask, applyMask } from '../../engine/selection/mask';
 import type { ProcessOptions } from '../../engine/types';
 
 const registry = createPresetRegistry();
@@ -17,44 +20,90 @@ export function SliderCompare() {
   const originalImage = useAppStore((s) => s.originalImage);
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
+  const customPalette = useAppStore((s) => s.customPalette);
+  const personMode = useAppStore((s) => s.personMode);
+  const cutoutBg = useAppStore((s) => s.cutoutBg);
+  const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
+  const shape = useAppStore((s) => s.selection.shape);
+  const invert = useAppStore((s) => s.selection.invert);
 
   useEffect(() => {
     if (!originalImage || !originalCanvasRef.current || !processedCanvasRef.current) return;
 
-    const sourceData = imageToImageData(originalImage);
+    let cancelled = false;
 
-    // Draw original
-    const origCanvas = originalCanvasRef.current;
-    origCanvas.width = originalImage.naturalWidth;
-    origCanvas.height = originalImage.naturalHeight;
-    const origCtx = origCanvas.getContext('2d')!;
-    origCtx.drawImage(originalImage, 0, 0);
+    const render = async () => {
+      const sourceData = imageToImageData(originalImage);
+      if (cancelled) return;
 
-    // Draw processed
-    let options: ProcessOptions = {
-      downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
-      quantize: { method: 'none' },
-    };
+      // Draw original
+      const origCanvas = originalCanvasRef.current!;
+      origCanvas.width = originalImage.naturalWidth;
+      origCanvas.height = originalImage.naturalHeight;
+      const origCtx = origCanvas.getContext('2d')!;
+      origCtx.drawImage(originalImage, 0, 0);
 
-    if (presetId) {
-      const preset = registry.get(presetId);
-      if (preset) {
+      // Draw processed
+      let options: ProcessOptions = {
+        downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
+        quantize: {
+          method: params.quantizeMethod,
+          maxColors: params.maxColors,
+        },
+      };
+
+      if (presetId) {
+        const preset = registry.get(presetId);
+        if (preset) {
+          options = {
+            downsample: preset.config.downsample,
+            quantize: preset.config.quantize,
+          };
+        }
+      } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
         options = {
-          downsample: preset.config.downsample,
-          quantize: preset.config.quantize,
+          ...options,
+          quantize: {
+            method: 'fixed-palette',
+            palette: customPalette,
+          },
         };
       }
-    }
 
-    const result = processImage(sourceData, options);
-    const resultCanvas = imageDataToCanvas(result);
+      let result: ImageData;
+      if (personMode === 'cutout') {
+        try {
+          result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+        } catch {
+          result = processImage(sourceData, options);
+        }
+      } else if (personMode === 'style') {
+        result = processStyle(sourceData, options);
+      } else {
+        result = processImage(sourceData, options);
+      }
 
-    const procCanvas = processedCanvasRef.current;
-    procCanvas.width = resultCanvas.width;
-    procCanvas.height = resultCanvas.height;
-    const procCtx = procCanvas.getContext('2d')!;
-    procCtx.drawImage(resultCanvas, 0, 0);
-  }, [originalImage, params, presetId]);
+      if (shape) {
+        const mask = createMask(shape, sourceData.width, sourceData.height, invert);
+        result = applyMask(sourceData, result, mask);
+      }
+
+      if (cancelled) return;
+
+      const resultCanvas = imageDataToCanvas(result);
+      const procCanvas = processedCanvasRef.current!;
+      procCanvas.width = resultCanvas.width;
+      procCanvas.height = resultCanvas.height;
+      const procCtx = procCanvas.getContext('2d')!;
+      procCtx.drawImage(resultCanvas, 0, 0);
+    };
+
+    render();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [originalImage, params, presetId, customPalette, personMode, cutoutBg, cutoutBgColor, shape, invert]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {

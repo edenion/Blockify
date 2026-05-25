@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { QuantizeMethod, RGB } from '../engine/types';
 import type { Preset } from '../engine/presets/registry';
+import type { Shape } from '../engine/selection/shapes';
 import { loadCustomPresets, saveCustomPresets } from './storage';
 
 export type Algorithm = 'nearest' | 'average';
@@ -55,8 +56,10 @@ export interface AppState {
   // Selection
   selection: {
     invert: boolean;
+    shape: Shape | null;
   };
   setSelectionInvert: (invert: boolean) => void;
+  setSelectionShape: (shape: Shape | null) => void;
 
   // Person mode
   personMode: PersonMode;
@@ -166,10 +169,15 @@ export const useAppStore = create<AppState>((set) => ({
 
   selection: {
     invert: false,
+    shape: null,
   },
   setSelectionInvert: (invert) =>
     set((state) => ({
       selection: { ...state.selection, invert },
+    })),
+  setSelectionShape: (shape) =>
+    set((state) => ({
+      selection: { ...state.selection, shape },
     })),
 
   personMode: null,

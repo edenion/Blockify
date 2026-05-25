@@ -37,14 +37,19 @@ export async function processCutout(
   const ctx = canvas.getContext('2d')!;
   ctx.putImageData(source, 0, 0);
 
-  const maskData = await new Promise<ImageData>((resolve, reject) => {
-    ss.onResults((results) => {
-      const maskCanvas = results.segmentationMask as HTMLCanvasElement;
-      const maskCtx = maskCanvas.getContext('2d')!;
-      resolve(maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height));
-    });
-    ss.send({ image: canvas }).catch(reject);
-  });
+  const maskData = await Promise.race([
+    new Promise<ImageData>((resolve, reject) => {
+      ss.onResults((results) => {
+        const maskCanvas = results.segmentationMask as HTMLCanvasElement;
+        const maskCtx = maskCanvas.getContext('2d')!;
+        resolve(maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height));
+      });
+      ss.send({ image: canvas }).catch(reject);
+    }),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('人像分割超时')), 30000)
+    ),
+  ]);
 
   const mask = maskData;
   const processed = processImage(source, options);

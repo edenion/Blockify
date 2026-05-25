@@ -205,7 +205,6 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
 
     setPolygonPoints((prev) => {
       if (prev.length < 3) {
-        // Not enough points, just keep them for more clicks
         return prev;
       }
       const shape = createPolygon(prev);
@@ -218,7 +217,7 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawShape(ctx, shape);
 
-      return prev;
+      return []; // Reset after closing
     });
   }, [tool, onShapeCreated, drawShape]);
 

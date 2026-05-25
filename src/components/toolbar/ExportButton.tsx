@@ -1,8 +1,11 @@
 import { useAppStore } from '../../store';
-import { processImage } from '../../engine';
+import { processStyle } from '../../engine/person/style';
+import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
+import { createMask, applyMask } from '../../engine/selection/mask';
 import { downloadPNG } from '../../engine/export/png';
+import { usePixelEngine } from '../../hooks/usePixelEngine';
 import type { ProcessOptions } from '../../engine/types';
 
 const registry = createPresetRegistry();
@@ -11,15 +14,25 @@ export function ExportButton() {
   const originalImage = useAppStore((s) => s.originalImage);
   const params = useAppStore((s) => s.params);
   const presetId = useAppStore((s) => s.presetId);
+  const customPalette = useAppStore((s) => s.customPalette);
+  const personMode = useAppStore((s) => s.personMode);
+  const cutoutBg = useAppStore((s) => s.cutoutBg);
+  const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
+  const shape = useAppStore((s) => s.selection.shape);
+  const invert = useAppStore((s) => s.selection.invert);
+  const { process: processInWorker } = usePixelEngine();
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!originalImage) return;
 
     const sourceData = imageToImageData(originalImage);
 
     let options: ProcessOptions = {
       downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
-      quantize: { method: 'none' },
+      quantize: {
+        method: params.quantizeMethod,
+        maxColors: params.maxColors,
+      },
     };
 
     if (presetId) {
@@ -30,9 +43,30 @@ export function ExportButton() {
           quantize: preset.config.quantize,
         };
       }
+    } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
+      options = {
+        ...options,
+        quantize: {
+          method: 'fixed-palette',
+          palette: customPalette,
+        },
+      };
     }
 
-    const result = processImage(sourceData, options);
+    let result: ImageData;
+    if (personMode === 'cutout') {
+      result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+    } else if (personMode === 'style') {
+      result = processStyle(sourceData, options);
+    } else {
+      result = await processInWorker(sourceData, options);
+    }
+
+    if (shape) {
+      const mask = createMask(shape, sourceData.width, sourceData.height, invert);
+      result = applyMask(sourceData, result, mask);
+    }
+
     const canvas = imageDataToCanvas(result);
     downloadPNG(canvas);
   };

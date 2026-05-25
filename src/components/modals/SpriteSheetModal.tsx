@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store';
 import { createPresetRegistry } from '../../engine/presets';
 import { createSpriteSheet } from '../../engine/person/sprite';
@@ -15,6 +15,14 @@ export function SpriteSheetModal() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingUrlsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    return () => {
+      pendingUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      pendingUrlsRef.current.clear();
+    };
+  }, []);
 
   const spriteImages = useAppStore((s) => s.spriteImages);
   const addSpriteImage = useAppStore((s) => s.addSpriteImage);
@@ -42,11 +50,14 @@ export function SpriteSheetModal() {
         }
         const img = new Image();
         const url = URL.createObjectURL(file);
+        pendingUrlsRef.current.add(url);
         img.onload = () => {
+          pendingUrlsRef.current.delete(url);
           URL.revokeObjectURL(url);
           resolve(img);
         };
         img.onerror = () => {
+          pendingUrlsRef.current.delete(url);
           URL.revokeObjectURL(url);
           reject(new Error('图片加载失败'));
         };
