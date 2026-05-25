@@ -4,7 +4,7 @@ import { Toolbar } from './components/toolbar/Toolbar';
 import { CanvasViewport } from './components/canvas/CanvasViewport';
 import { ParamsPanel } from './components/params/ParamsPanel';
 
-export type SelectionTool = 'rectangle' | 'circle' | null;
+export type SelectionTool = 'rectangle' | 'circle' | 'polygon' | 'freehand' | null;
 
 function App() {
   const [activeTool, setActiveTool] = useState<SelectionTool>(null);
