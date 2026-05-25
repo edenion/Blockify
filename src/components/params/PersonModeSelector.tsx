@@ -23,12 +23,15 @@ export function PersonModeSelector() {
   const cutoutBgColor = useAppStore((s) => s.cutoutBgColor);
   const setCutoutBgColor = useAppStore((s) => s.setCutoutBgColor);
 
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
+
   const handleSelect = (id: PersonMode) => {
     if (personMode === id) {
       setPersonMode(null);
     } else {
       setPersonMode(id);
     }
+    saveSnapshot();
   };
 
   const activeMode = modes.find((m) => m.id === personMode);

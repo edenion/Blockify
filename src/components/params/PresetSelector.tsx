@@ -8,6 +8,7 @@ export function PresetSelector() {
   const setPresetId = useAppStore((s) => s.setPresetId);
   const setParams = useAppStore((s) => s.setParams);
   const customPresets = useAppStore((s) => s.customPresets);
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
 
   const hardwarePresets = registry.getByCategory('hardware');
   const themePresets = registry.getByCategory('theme');
@@ -15,6 +16,7 @@ export function PresetSelector() {
   const handleSelect = (id: string) => {
     if (presetId === id) {
       setPresetId(null);
+      saveSnapshot();
       return;
     }
     const builtIn = registry.get(id);
@@ -26,6 +28,7 @@ export function PresetSelector() {
         maxColors: builtIn.config.quantize.maxColors ?? 16,
       });
       setPresetId(id);
+      saveSnapshot();
       return;
     }
     const custom = customPresets.find((p) => p.id === id);
@@ -37,6 +40,7 @@ export function PresetSelector() {
         maxColors: custom.config.quantize.maxColors ?? 16,
       });
       setPresetId(id);
+      saveSnapshot();
     }
   };
 
@@ -111,7 +115,10 @@ export function PresetSelector() {
 
       {presetId && (
         <button
-          onClick={() => setPresetId(null)}
+          onClick={() => {
+            setPresetId(null);
+            saveSnapshot();
+          }}
           className="w-full py-1.5 text-[10px] font-terminal text-retro-muted border border-retro-border hover:border-retro-warning hover:text-retro-warning transition-colors"
         >
           清除预设

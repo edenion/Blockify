@@ -4,6 +4,7 @@ import { useAppStore } from '../../store';
 export function BlockSizeSlider() {
   const blockSize = useAppStore((s) => s.params.blockSize);
   const setParams = useAppStore((s) => s.setParams);
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
   const [localValue, setLocalValue] = useState(blockSize);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export function BlockSizeSlider() {
         max={64}
         value={localValue}
         onChange={(e) => setLocalValue(Number(e.target.value))}
+        onMouseUp={() => saveSnapshot()}
         className="w-full h-2 bg-retro-border appearance-none cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:w-3

@@ -6,6 +6,14 @@ import { loadCustomPresets, saveCustomPresets } from './storage';
 export type Algorithm = 'nearest' | 'average';
 export type PersonMode = 'normal' | 'cutout' | 'style' | 'sprite' | null;
 
+export interface HistorySnapshot {
+  params: AppState['params'];
+  selection: AppState['selection'];
+  presetId: string | null;
+  personMode: PersonMode;
+  customPalette: RGB[];
+}
+
 export interface AppState {
   // Image
   originalImage: HTMLImageElement | null;
@@ -73,6 +81,25 @@ export interface AppState {
   // Processing state
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
+
+  // History
+  history: {
+    past: HistorySnapshot[];
+    future: HistorySnapshot[];
+  };
+  saveSnapshot: () => void;
+  undo: () => void;
+  redo: () => void;
+}
+
+function getSnapshot(state: AppState): HistorySnapshot {
+  return {
+    params: { ...state.params },
+    selection: { ...state.selection },
+    presetId: state.presetId,
+    personMode: state.personMode,
+    customPalette: [...state.customPalette],
+  };
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -164,4 +191,56 @@ export const useAppStore = create<AppState>((set) => ({
 
   isProcessing: false,
   setIsProcessing: (processing) => set({ isProcessing: processing }),
+
+  history: { past: [], future: [] },
+  saveSnapshot: () =>
+    set((state) => {
+      const snapshot = getSnapshot(state);
+      const lastPast = state.history.past[state.history.past.length - 1];
+      if (lastPast && JSON.stringify(lastPast) === JSON.stringify(snapshot)) {
+        return state;
+      }
+      return {
+        history: {
+          past: [...state.history.past, snapshot],
+          future: [],
+        },
+      };
+    }),
+  undo: () =>
+    set((state) => {
+      if (state.history.past.length === 0) return state;
+      const current = getSnapshot(state);
+      const previous = state.history.past[state.history.past.length - 1];
+      const newPast = state.history.past.slice(0, -1);
+      return {
+        params: previous.params,
+        selection: previous.selection,
+        presetId: previous.presetId,
+        personMode: previous.personMode,
+        customPalette: previous.customPalette,
+        history: {
+          past: newPast,
+          future: [current, ...state.history.future],
+        },
+      };
+    }),
+  redo: () =>
+    set((state) => {
+      if (state.history.future.length === 0) return state;
+      const current = getSnapshot(state);
+      const next = state.history.future[0];
+      const newFuture = state.history.future.slice(1);
+      return {
+        params: next.params,
+        selection: next.selection,
+        presetId: next.presetId,
+        personMode: next.personMode,
+        customPalette: next.customPalette,
+        history: {
+          past: [...state.history.past, current],
+          future: newFuture,
+        },
+      };
+    }),
 }));

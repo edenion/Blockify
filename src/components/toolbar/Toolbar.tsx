@@ -1,4 +1,5 @@
 import { ExportButton } from './ExportButton';
+import { HistoryButtons } from './HistoryButtons';
 
 export type SelectionTool = 'rectangle' | 'circle' | 'polygon' | 'freehand' | null;
 
@@ -18,6 +19,8 @@ export function Toolbar({ onSelectTool, activeTool }: ToolbarProps) {
   return (
     <div className="w-14 bg-retro-panel border-r-2 border-retro-border flex flex-col items-center py-3 gap-2">
       <span className="text-retro-muted text-[10px] font-pixel mb-2">TOOLS</span>
+      <HistoryButtons />
+      <div className="w-full h-px bg-retro-border my-1" />
 
       {TOOLS.map((t) => (
         <button

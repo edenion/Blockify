@@ -3,12 +3,18 @@ import { useAppStore } from '../../store';
 export function MaskInvertToggle() {
   const invert = useAppStore((s) => s.selection.invert);
   const setSelectionInvert = useAppStore((s) => s.setSelectionInvert);
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
+
+  const handleToggle = () => {
+    setSelectionInvert(!invert);
+    saveSnapshot();
+  };
 
   return (
     <div className="space-y-2">
       <h3 className="text-retro-muted text-xs font-pixel">SELECTION</h3>
       <button
-        onClick={() => setSelectionInvert(!invert)}
+        onClick={handleToggle}
         className={`w-full py-1.5 text-xs font-terminal border transition-colors ${
           invert
             ? 'border-retro-primary bg-retro-primary/10 text-retro-primary'
