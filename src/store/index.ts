@@ -58,6 +58,18 @@ export interface AppState {
   setCutoutBg: (bg: 'keep' | 'pixelate' | 'color') => void;
   setCutoutBgColor: (color: string) => void;
 
+  // Sprite mode
+  spriteImages: HTMLImageElement[];
+  spriteLayout: 'horizontal' | 'grid';
+  spriteGridCols: number;
+  spritePadding: number;
+  addSpriteImage: (image: HTMLImageElement) => void;
+  removeSpriteImage: (index: number) => void;
+  clearSpriteImages: () => void;
+  setSpriteLayout: (layout: 'horizontal' | 'grid') => void;
+  setSpriteGridCols: (cols: number) => void;
+  setSpritePadding: (padding: number) => void;
+
   // Processing state
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
@@ -136,6 +148,19 @@ export const useAppStore = create<AppState>((set) => ({
   cutoutBgColor: '#0f172a',
   setCutoutBg: (bg) => set({ cutoutBg: bg }),
   setCutoutBgColor: (color) => set({ cutoutBgColor: color }),
+
+  spriteImages: [],
+  spriteLayout: 'horizontal',
+  spriteGridCols: 2,
+  spritePadding: 0,
+  addSpriteImage: (image) =>
+    set((state) => ({ spriteImages: [...state.spriteImages, image] })),
+  removeSpriteImage: (index) =>
+    set((state) => ({ spriteImages: state.spriteImages.filter((_, i) => i !== index) })),
+  clearSpriteImages: () => set({ spriteImages: [] }),
+  setSpriteLayout: (layout) => set({ spriteLayout: layout }),
+  setSpriteGridCols: (cols) => set({ spriteGridCols: cols }),
+  setSpritePadding: (padding) => set({ spritePadding: padding }),
 
   isProcessing: false,
   setIsProcessing: (processing) => set({ isProcessing: processing }),

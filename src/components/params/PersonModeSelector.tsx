@@ -1,5 +1,6 @@
 import { useAppStore } from '../../store';
 import type { PersonMode } from '../../store';
+import { SpriteSheetModal } from '../modals/SpriteSheetModal';
 
 const modes: { id: PersonMode; label: string; desc: string }[] = [
   { id: 'normal', label: 'Normal', desc: '普通像素化处理' },
@@ -89,6 +90,12 @@ export function PersonModeSelector() {
               </span>
             </div>
           )}
+        </div>
+      )}
+
+      {personMode === 'sprite' && (
+        <div className="mt-2 pt-2 border-t border-retro-border">
+          <SpriteSheetModal />
         </div>
       )}
     </div>
