@@ -1,4 +1,4 @@
-export type ShapeType = 'rectangle' | 'circle';
+export type ShapeType = 'rectangle' | 'circle' | 'polygon' | 'freehand';
 
 export interface Point {
   x: number;
@@ -20,7 +20,17 @@ export interface Circle {
   radius: number;
 }
 
-export type Shape = Rectangle | Circle;
+export interface Polygon {
+  type: 'polygon';
+  points: Point[];
+}
+
+export interface Freehand {
+  type: 'freehand';
+  path: Point[];
+}
+
+export type Shape = Rectangle | Circle | Polygon | Freehand;
 
 export function createRectangle(start: Point, end: Point): Rectangle {
   const x = Math.min(start.x, end.x);
@@ -35,4 +45,12 @@ export function createCircle(start: Point, end: Point): Circle {
   const cy = start.y;
   const radius = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
   return { type: 'circle', cx, cy, radius };
+}
+
+export function createPolygon(points: Point[]): Polygon {
+  return { type: 'polygon', points };
+}
+
+export function createFreehand(path: Point[]): Freehand {
+  return { type: 'freehand', path };
 }
