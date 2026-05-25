@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { RGB, DownsampleOptions, QuantizeOptions, ProcessOptions } from '../../src/engine/types';
+import type { RGB, DownsampleOptions } from '../../src/engine/types';
 
 describe('engine types', () => {
   it('RGB type should accept valid color values', () => {
