@@ -4,6 +4,7 @@ import { AlgorithmToggle } from './AlgorithmToggle';
 import { PresetSelector } from './PresetSelector';
 import { QuantizeModeSelector } from './QuantizeModeSelector';
 import { MaskInvertToggle } from './MaskInvertToggle';
+import { PersonModeSelector } from './PersonModeSelector';
 import { CustomPaletteEditor } from './CustomPaletteEditor';
 import { CustomPresetManager } from './CustomPresetManager';
 
@@ -64,6 +65,7 @@ export function ParamsPanel() {
       <PresetSelector />
       <CustomPresetManager />
       <MaskInvertToggle />
+      <PersonModeSelector />
       <CustomPaletteEditor />
       <CompareControl />
     </div>

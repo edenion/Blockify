@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../../store';
 import { processImage } from '../../engine';
+import { processNormal } from '../../engine/person/normal';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
 import { createMask, applyMask } from '../../engine/selection/mask';
@@ -23,6 +24,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const customPalette = useAppStore((s) => s.customPalette);
   const setIsProcessing = useAppStore((s) => s.setIsProcessing);
   const invert = useAppStore((s) => s.selection.invert);
+  const personMode = useAppStore((s) => s.personMode);
   const [shape, setShape] = useState<Shape | null>(null);
 
   useEffect(() => {
@@ -60,7 +62,13 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
         };
       }
 
-      let result = processImage(sourceData, options);
+      let result: ImageData;
+      if (personMode === 'normal') {
+        result = processNormal(sourceData, options);
+      } else {
+        // Fallback for now — other modes will be implemented in later tasks
+        result = processImage(sourceData, options);
+      }
 
       // Apply selection mask if shape exists
       if (shape) {
@@ -78,7 +86,7 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
       setIsProcessing(false);
     });
-  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert]);
+  }, [originalImage, params, presetId, customPalette, setIsProcessing, shape, invert, personMode]);
 
   if (!originalImage) return null;
 

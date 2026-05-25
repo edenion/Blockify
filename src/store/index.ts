@@ -4,6 +4,7 @@ import type { Preset } from '../engine/presets/registry';
 import { loadCustomPresets, saveCustomPresets } from './storage';
 
 export type Algorithm = 'nearest' | 'average';
+export type PersonMode = 'normal' | 'cutout' | 'style' | 'sprite' | null;
 
 export interface AppState {
   // Image
@@ -46,6 +47,10 @@ export interface AppState {
     invert: boolean;
   };
   setSelectionInvert: (invert: boolean) => void;
+
+  // Person mode
+  personMode: PersonMode;
+  setPersonMode: (mode: PersonMode) => void;
 
   // Processing state
   isProcessing: boolean;
@@ -117,6 +122,9 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       selection: { ...state.selection, invert },
     })),
+
+  personMode: null,
+  setPersonMode: (mode) => set({ personMode: mode }),
 
   isProcessing: false,
   setIsProcessing: (processing) => set({ isProcessing: processing }),
