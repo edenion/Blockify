@@ -58,6 +58,11 @@ export function QuantizeModeSelector() {
           />
         </div>
       )}
+      {method === 'fixed-palette' && (
+        <p className="text-[10px] font-terminal text-retro-muted">
+          使用当前预设或自定义调色板中的颜色
+        </p>
+      )}
     </div>
   );
 }

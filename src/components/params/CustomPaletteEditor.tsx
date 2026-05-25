@@ -20,6 +20,7 @@ export function CustomPaletteEditor() {
   const customPalette = useAppStore((s) => s.customPalette);
   const addCustomPaletteColor = useAppStore((s) => s.addCustomPaletteColor);
   const removeCustomPaletteColor = useAppStore((s) => s.removeCustomPaletteColor);
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
   const [color, setColor] = useState('#00ff00');
 
   const canAdd = customPalette.length < 32;
@@ -27,6 +28,12 @@ export function CustomPaletteEditor() {
   const handleAdd = () => {
     if (!canAdd) return;
     addCustomPaletteColor(hexToRgb(color));
+    saveSnapshot();
+  };
+
+  const handleRemove = (index: number) => {
+    removeCustomPaletteColor(index);
+    saveSnapshot();
   };
 
   return (
@@ -62,7 +69,7 @@ export function CustomPaletteEditor() {
           {customPalette.map((c, i) => (
             <button
               key={i}
-              onClick={() => removeCustomPaletteColor(i)}
+              onClick={() => handleRemove(i)}
               className="w-6 h-6 border border-retro-border cursor-pointer hover:brightness-125"
               style={{ backgroundColor: rgbToHex(c) }}
               title={`删除 ${rgbToHex(c)}`}

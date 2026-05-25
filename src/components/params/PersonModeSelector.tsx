@@ -34,6 +34,11 @@ export function PersonModeSelector() {
     saveSnapshot();
   };
 
+  const handleBgChange = (bg: typeof cutoutBg) => {
+    setCutoutBg(bg);
+    saveSnapshot();
+  };
+
   const activeMode = modes.find((m) => m.id === personMode);
 
   return (
@@ -69,7 +74,7 @@ export function PersonModeSelector() {
             {bgModes.map((bg) => (
               <button
                 key={bg.id}
-                onClick={() => setCutoutBg(bg.id)}
+                onClick={() => handleBgChange(bg.id)}
                 className={`flex-1 py-1.5 px-1 text-[10px] font-terminal border transition-colors ${
                   cutoutBg === bg.id
                     ? 'border-retro-primary bg-retro-primary/10 text-retro-primary'

@@ -19,8 +19,13 @@ export function imageToImageData(img: HTMLImageElement): ImageData {
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
   const ctx = canvas.getContext('2d')!;
-  ctx.drawImage(img, 0, 0);
-  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+  try {
+    ctx.drawImage(img, 0, 0);
+    return ctx.getImageData(0, 0, canvas.width, canvas.height);
+  } catch {
+    // CORS tainted canvas — return blank ImageData as fallback
+    return new ImageData(canvas.width, canvas.height);
+  }
 }
 
 export function imageDataToCanvas(imageData: ImageData): HTMLCanvasElement {

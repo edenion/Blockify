@@ -18,6 +18,7 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
   const [currentShape, setCurrentShape] = useState<Shape | null>(null);
   const [, setPolygonPoints] = useState<Point[]>([]);
   const [freehandPath, setFreehandPath] = useState<Point[]>([]);
+  const freehandPathRef = useRef<Point[]>([]);
 
   const getPoint = useCallback((e: React.MouseEvent<HTMLCanvasElement>): Point => {
     const canvas = canvasRef.current!;
@@ -125,6 +126,7 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
     setCurrentShape(null);
     setPolygonPoints([]);
     setFreehandPath([]);
+    freehandPathRef.current = [];
   }, []);
 
   // ===== Drag-based tools: rectangle / circle / freehand =====
@@ -137,6 +139,7 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
     setCurrentShape(null);
 
     if (tool === 'freehand') {
+      freehandPathRef.current = [point];
       setFreehandPath([point]);
     }
   }, [tool, getPoint]);
@@ -159,11 +162,10 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawShape(ctx, shape);
     } else if (tool === 'freehand') {
-      setFreehandPath((prev) => {
-        const newPath = [...prev, currentPoint];
-        drawFreehandPreview(ctx, newPath);
-        return newPath;
-      });
+      const newPath = [...freehandPathRef.current, currentPoint];
+      freehandPathRef.current = newPath;
+      drawFreehandPreview(ctx, newPath);
+      setFreehandPath(newPath);
     }
   }, [isDrawing, startPoint, tool, getPoint, drawShape, drawFreehandPreview]);
 
@@ -171,8 +173,9 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
     if (!isDrawing) return;
     setIsDrawing(false);
 
-    if (tool === 'freehand' && freehandPath.length >= 3) {
-      const shape = createFreehand(freehandPath);
+    if (tool === 'freehand' && freehandPathRef.current.length >= 3) {
+      const shape = createFreehand(freehandPathRef.current);
+      freehandPathRef.current = [];
       setCurrentShape(shape);
       onShapeCreated(shape);
       // Draw final shape with fill

@@ -36,59 +36,61 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
   const processWithSource = useCallback(async (source: HTMLImageElement | HTMLCanvasElement) => {
     if (!canvasRef.current) return;
 
-    const sourceData = source instanceof HTMLImageElement
-      ? imageToImageData(source)
-      : source.getContext('2d')!.getImageData(0, 0, source.width, source.height);
+    try {
+      const sourceData = source instanceof HTMLImageElement
+        ? imageToImageData(source)
+        : source.getContext('2d')!.getImageData(0, 0, source.width, source.height);
 
-    let options: ProcessOptions = {
-      downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
-      quantize: {
-        method: params.quantizeMethod,
-        maxColors: params.maxColors,
-      },
-    };
-
-    if (presetId) {
-      const preset = registry.get(presetId);
-      if (preset) {
-        options = {
-          downsample: preset.config.downsample,
-          quantize: preset.config.quantize,
-        };
-      }
-    } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
-      options = {
-        ...options,
+      let options: ProcessOptions = {
+        downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
         quantize: {
-          method: 'fixed-palette',
-          palette: customPalette,
+          method: params.quantizeMethod,
+          maxColors: params.maxColors,
         },
       };
+
+      if (presetId) {
+        const preset = registry.get(presetId);
+        if (preset) {
+          options = {
+            downsample: preset.config.downsample,
+            quantize: preset.config.quantize,
+          };
+        }
+      } else if (params.quantizeMethod === 'fixed-palette' && customPalette.length > 0) {
+        options = {
+          ...options,
+          quantize: {
+            method: 'fixed-palette',
+            palette: customPalette,
+          },
+        };
+      }
+
+      let result: ImageData;
+      if (personMode === 'cutout') {
+        result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+      } else if (personMode === 'style') {
+        result = processStyle(sourceData, options);
+      } else {
+        result = await processInWorker(sourceData, options);
+      }
+
+      if (shape) {
+        const mask = createMask(shape, sourceData.width, sourceData.height, invert);
+        result = applyMask(sourceData, result, mask);
+      }
+
+      const resultCanvas = imageDataToCanvas(result);
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d')!;
+
+      canvas.width = resultCanvas.width;
+      canvas.height = resultCanvas.height;
+      ctx.drawImage(resultCanvas, 0, 0);
+    } catch (err) {
+      console.error('Image processing failed:', err);
     }
-
-    let result: ImageData;
-    if (personMode === 'cutout') {
-      result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
-    } else if (personMode === 'style') {
-      result = processStyle(sourceData, options);
-    } else if (personMode === 'normal') {
-      result = await processInWorker(sourceData, options);
-    } else {
-      result = await processInWorker(sourceData, options);
-    }
-
-    if (shape) {
-      const mask = createMask(shape, sourceData.width, sourceData.height, invert);
-      result = applyMask(sourceData, result, mask);
-    }
-
-    const resultCanvas = imageDataToCanvas(result);
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d')!;
-
-    canvas.width = resultCanvas.width;
-    canvas.height = resultCanvas.height;
-    ctx.drawImage(resultCanvas, 0, 0);
   }, [params, presetId, customPalette, personMode, cutoutBg, cutoutBgColor, shape, invert, processInWorker]);
 
   useEffect(() => {
@@ -100,22 +102,24 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
     const source = thumbnailImage || originalImage;
 
     requestAnimationFrame(() => {
-      processWithSource(source).then(() => {
-        setIsProcessing(false);
+      processWithSource(source)
+        .then(() => {
+          setIsProcessing(false);
 
-        // Schedule high-quality render with original image after 500ms of no changes
-        if (hqTimeoutRef.current) {
-          clearTimeout(hqTimeoutRef.current);
-        }
-        hqTimeoutRef.current = setTimeout(() => {
-          if (thumbnailImage && canvasRef.current) {
-            setIsProcessing(true);
-            processWithSource(originalImage).then(() => {
-              setIsProcessing(false);
-            });
+          // Schedule high-quality render with original image after 500ms of no changes
+          if (hqTimeoutRef.current) {
+            clearTimeout(hqTimeoutRef.current);
           }
-        }, 500);
-      });
+          hqTimeoutRef.current = setTimeout(() => {
+            if (thumbnailImage && canvasRef.current) {
+              setIsProcessing(true);
+              processWithSource(originalImage)
+                .then(() => setIsProcessing(false))
+                .catch(() => setIsProcessing(false));
+            }
+          }, 500);
+        })
+        .catch(() => setIsProcessing(false));
     });
 
     return () => {

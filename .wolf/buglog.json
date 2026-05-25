@@ -353,6 +353,326 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-25T06:57:07.341Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-05-25T07:02:32.026Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Had '../../engine/person/cutout'",
+      "fix": "Changed to '../../engine/person/style'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:02:32.026Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-05-25T07:13:44.252Z",
+      "error_message": "Type error",
+      "file": "src/store/index.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:13:44.252Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-05-25T07:13:59.772Z",
+      "error_message": "Missing guard clause",
+      "file": "src/store/index.ts",
+      "root_cause": "No early return/throw for edge case: lastPast && JSON.stringify(lastPast",
+      "fix": "Added guard clause: if (lastPast && JSON.stringify(lastPast)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:13:59.772Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-05-25T07:15:14.867Z",
+      "error_message": "CSS fix: algorithm",
+      "file": "src/components/params/AlgorithmToggle.tsx",
+      "root_cause": "algorithm: 'nearest' → value",
+      "fix": "Changed algorithm: 'nearest' → value",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:15:14.867Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-05-25T07:19:04.830Z",
+      "error_message": "Type error",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:19:04.830Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-05-25T07:19:20.309Z",
+      "error_message": "Type error",
+      "file": "src/engine/worker.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:19:20.309Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-05-25T07:50:12.570Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/components/canvas/UploadZone.tsx",
+      "root_cause": "Had \"w-80 h-64 border-2 border-dashed border-retro-bor",
+      "fix": "Changed to \"w-80 h-64 border-2 border-dashed border-retro-bor",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:50:12.570Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-05-25T07:50:12.675Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/components/toolbar/Toolbar.tsx",
+      "root_cause": "Had 'border-retro-border text-retro-muted hover:text-r",
+      "fix": "Changed to 'border-retro-border text-retro-muted hover:text-r",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T07:50:12.675Z"
+    },
+    {
+      "id": "bug-031",
+      "timestamp": "2026-05-25T08:00:03.331Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/engine/selection/mask.ts",
+      "root_cause": "8 lines replaced/restructured",
+      "fix": "Rewrote 22→28 lines (8 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:00:03.331Z"
+    },
+    {
+      "id": "bug-032",
+      "timestamp": "2026-05-25T08:00:03.445Z",
+      "error_message": "Null/undefined access in ",
+      "file": "src/hooks/usePixelEngine.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:00:03.445Z"
+    },
+    {
+      "id": "bug-033",
+      "timestamp": "2026-05-25T08:03:01.400Z",
+      "error_message": "Missing await",
+      "file": "src/components/toolbar/ExportButton.tsx",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:03:01.400Z"
+    },
+    {
+      "id": "bug-034",
+      "timestamp": "2026-05-25T08:06:07.736Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/components/toolbar/ExportButton.tsx",
+      "root_cause": "Had '../../engine'",
+      "fix": "Changed to '../../engine/person/style'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:06:07.736Z"
+    },
+    {
+      "id": "bug-035",
+      "timestamp": "2026-05-25T08:22:05.524Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 5→3 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:22:05.524Z"
+    },
+    {
+      "id": "bug-036",
+      "timestamp": "2026-05-25T08:22:58.970Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/App.tsx",
+      "root_cause": "19 lines replaced/restructured",
+      "fix": "Rewrote 42→23 lines (19 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:22:58.970Z"
+    },
+    {
+      "id": "bug-037",
+      "timestamp": "2026-05-25T08:26:18.032Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/components/layout/TitleBar.tsx",
+      "root_cause": "10 lines replaced/restructured",
+      "fix": "Rewrote 11→5 lines (10 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:26:18.032Z"
+    },
+    {
+      "id": "bug-038",
+      "timestamp": "2026-05-25T08:26:50.146Z",
+      "error_message": "Type error",
+      "file": "src/engine/algorithms/edge-enhance.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:26:50.146Z"
+    },
+    {
+      "id": "bug-039",
+      "timestamp": "2026-05-25T08:26:50.265Z",
+      "error_message": "Missing error handling in imageToImageData",
+      "file": "src/utils/image.ts",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:26:50.265Z"
+    },
+    {
+      "id": "bug-040",
+      "timestamp": "2026-05-25T08:28:02.626Z",
+      "error_message": "Wrong reference: setCutoutBg should be handleBgChange",
+      "file": "src/components/params/PersonModeSelector.tsx",
+      "root_cause": "Used \"setCutoutBg\" instead of \"handleBgChange\"",
+      "fix": "Changed setCutoutBg → handleBgChange",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:28:02.626Z"
+    },
+    {
+      "id": "bug-041",
+      "timestamp": "2026-05-25T08:28:02.735Z",
+      "error_message": "Wrong reference: removeCustomPaletteColor should be handleRemove",
+      "file": "src/components/params/CustomPaletteEditor.tsx",
+      "root_cause": "Used \"removeCustomPaletteColor\" instead of \"handleRemove\"",
+      "fix": "Changed removeCustomPaletteColor → handleRemove",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T08:28:02.735Z"
+    },
+    {
+      "id": "bug-042",
+      "timestamp": "2026-05-25T08:33:16.301Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "src/components/canvas/ImageCanvas.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block | Also: processWithSource(source); .then(() => {",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-25T08:33:33.554Z"
     }
   ]
 }

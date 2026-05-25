@@ -18,6 +18,11 @@ export function BlockSizeSlider() {
     return () => clearTimeout(timer);
   }, [localValue, setParams]);
 
+  const commit = () => {
+    setParams({ blockSize: localValue });
+    saveSnapshot();
+  };
+
   return (
     <div className="space-y-2">
       <label className="text-retro-muted text-xs font-pixel flex justify-between">
@@ -30,7 +35,8 @@ export function BlockSizeSlider() {
         max={64}
         value={localValue}
         onChange={(e) => setLocalValue(Number(e.target.value))}
-        onMouseUp={() => saveSnapshot()}
+        onMouseUp={commit}
+        onTouchEnd={commit}
         className="w-full h-2 bg-retro-border appearance-none cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:w-3

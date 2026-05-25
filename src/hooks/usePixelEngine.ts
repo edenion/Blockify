@@ -33,7 +33,7 @@ export function usePixelEngine() {
 
       return new Promise((resolve, reject) => {
         const handleMessage = (e: MessageEvent) => {
-          worker.removeEventListener('message', handleMessage);
+          cleanup();
           if (e.data.error) {
             reject(new Error(e.data.error));
           } else {
@@ -41,7 +41,18 @@ export function usePixelEngine() {
           }
         };
 
+        const handleError = () => {
+          cleanup();
+          reject(new Error('Worker processing failed'));
+        };
+
+        const cleanup = () => {
+          worker.removeEventListener('message', handleMessage);
+          worker.removeEventListener('error', handleError);
+        };
+
         worker.addEventListener('message', handleMessage);
+        worker.addEventListener('error', handleError);
         worker.postMessage({ imageData, options }, [imageData.data.buffer]);
       });
     },

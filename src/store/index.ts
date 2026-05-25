@@ -13,6 +13,8 @@ export interface HistorySnapshot {
   presetId: string | null;
   personMode: PersonMode;
   customPalette: RGB[];
+  cutoutBg: 'keep' | 'pixelate' | 'color';
+  cutoutBgColor: string;
 }
 
 export interface AppState {
@@ -104,6 +106,8 @@ function getSnapshot(state: AppState): HistorySnapshot {
     presetId: state.presetId,
     personMode: state.personMode,
     customPalette: [...state.customPalette],
+    cutoutBg: state.cutoutBg,
+    cutoutBgColor: state.cutoutBgColor,
   };
 }
 
@@ -231,6 +235,8 @@ export const useAppStore = create<AppState>((set) => ({
         presetId: previous.presetId,
         personMode: previous.personMode,
         customPalette: previous.customPalette,
+        cutoutBg: previous.cutoutBg,
+        cutoutBgColor: previous.cutoutBgColor,
         history: {
           past: newPast,
           future: [current, ...state.history.future],
@@ -249,6 +255,8 @@ export const useAppStore = create<AppState>((set) => ({
         presetId: next.presetId,
         personMode: next.personMode,
         customPalette: next.customPalette,
+        cutoutBg: next.cutoutBg,
+        cutoutBgColor: next.cutoutBgColor,
         history: {
           past: [...state.history.past, current],
           future: newFuture,
