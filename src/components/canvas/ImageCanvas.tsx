@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../../store';
 import { processImage } from '../../engine';
 import { processNormal } from '../../engine/person/normal';
+import { processStyle } from '../../engine/person/style';
 import { processCutout } from '../../engine/person/cutout';
 import { createPresetRegistry } from '../../engine/presets';
 import { imageToImageData, imageDataToCanvas } from '../../utils/image';
@@ -67,10 +68,11 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
       let result: ImageData;
       if (personMode === 'cutout') {
         result = await processCutout(sourceData, options, cutoutBg, cutoutBgColor);
+      } else if (personMode === 'style') {
+        result = processStyle(sourceData, options);
       } else if (personMode === 'normal') {
         result = processNormal(sourceData, options);
       } else {
-        // Fallback for now — other modes will be implemented in later tasks
         result = processImage(sourceData, options);
       }
 
