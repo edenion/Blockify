@@ -33,6 +33,10 @@
 - **Worker 错误恢复**：Web Worker 出错后若不重置实例，后续所有处理请求都会失败。应监听 `error` 事件并 `terminate() + null` 重建
 - **异步外部依赖超时**：`@mediapipe/selfie-segmentation` 从 CDN 加载模型，网络异常时会无限挂起。必须用 `Promise.race()` 添加超时保护
 - **Blob URL 内存管理**：`URL.createObjectURL()` 创建的 URL 若在组件卸载前未完成加载，会造成内存泄漏。应使用 `Set` 追踪 pending URLs，在 `useEffect` cleanup 中统一 `revokeObjectURL`
+- **HistorySnapshot 完整性**：影响处理结果的每个状态字段都必须纳入 `HistorySnapshot`，否则 undo/redo 后处理结果会与历史状态不一致。例如 `cutoutBg` / `cutoutBgColor` 直接影响 cutout 模式的输出，必须包含在快照和恢复逻辑中
+- **异步处理链的防御式编程**：`processWithSource` 等异步函数内部的 try/catch 不足够，调用端的 `.then()` 链也必须附加 `.catch()`，防止异常导致 `setIsProcessing(false)`  never 执行、UI 永久处于 loading 状态
+- **Zustand selector 对象引用陷阱**：`useAppStore((s) => s.ui)` 每次返回新对象引用，会导致组件无限重渲染。应拆分为原始值 selector：`useAppStore((s) => s.ui.showCompare)` 和 `useAppStore((s) => s.ui.compareMode)`
+- **事件处理器中优先使用 getState()**：快捷键等事件处理器若使用 `const undo = useAppStore((s) => s.undo)` selector，每次 store 变化都会触发 effect 重新订阅/清理。应在 handler 内部调用 `useAppStore.getState().undo()`，避免不必要的 effect 重运行
 
 ## Do-Not-Repeat
 
