@@ -29,7 +29,7 @@ export function Toolbar({ onSelectTool, activeTool }: ToolbarProps) {
           className={`w-10 h-10 border flex items-center justify-center transition-colors ${
             activeTool === t.id
               ? 'border-retro-primary text-retro-primary bg-retro-primary/10'
-              : 'border-retro-border text-retro-muted hover:text-retro-text hover:border-retro-text'
+              : 'border-retro-border text-retro-muted hover:text-retro-text hover:border-retro-text hover:bg-retro-primary/5'
           }`}
           title={t.title}
         >
