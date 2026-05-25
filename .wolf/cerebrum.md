@@ -27,11 +27,27 @@
 - **裁剪与框选**：可独立使用，无强制顺序
 - **自定义框选**：同时支持多边形点选和自由手绘路径
 - **框选遮罩实现**：选区内应用像素化、选区外保持原图，通过 `Uint8Array` 掩码 + `applyMask(source, processed, mask)` 混合两张 ImageData 实现；掩码在 `requestAnimationFrame` 中同步计算，无异步延迟
+- **选区状态应放入 Store**：`SelectionOverlay` 创建的 `shape` 原本是 ImageCanvas 的本地状态，导致 ExportButton 和对比视图无法访问当前选区。修复：将 `shape` 提升到 Zustand store 的 `selection.shape` 中，使所有处理管线（预览、导出、对比）使用同一数据源
+- **处理管线一致性**：ExportButton、SplitView、SliderCompare 的处理逻辑必须与 ImageCanvas 完全一致，否则用户预览和导出结果不同。应提取共享的选项构建逻辑或统一通过 store 消费
+- **多边形点检测性能**：Canvas `isPointInPath()` 每像素调用一次，1920x1080 图片需 200 万次 Canvas API 调用。改用射线法（ray-casting）纯 JS 实现，性能提升数个数量级
+- **Worker 错误恢复**：Web Worker 出错后若不重置实例，后续所有处理请求都会失败。应监听 `error` 事件并 `terminate() + null` 重建
+- **异步外部依赖超时**：`@mediapipe/selfie-segmentation` 从 CDN 加载模型，网络异常时会无限挂起。必须用 `Promise.race()` 添加超时保护
+- **Blob URL 内存管理**：`URL.createObjectURL()` 创建的 URL 若在组件卸载前未完成加载，会造成内存泄漏。应使用 `Set` 追踪 pending URLs，在 `useEffect` cleanup 中统一 `revokeObjectURL`
+- **HistorySnapshot 完整性**：影响处理结果的每个状态字段都必须纳入 `HistorySnapshot`，否则 undo/redo 后处理结果会与历史状态不一致。例如 `cutoutBg` / `cutoutBgColor` 直接影响 cutout 模式的输出，必须包含在快照和恢复逻辑中
+- **异步处理链的防御式编程**：`processWithSource` 等异步函数内部的 try/catch 不足够，调用端的 `.then()` 链也必须附加 `.catch()`，防止异常导致 `setIsProcessing(false)`  never 执行、UI 永久处于 loading 状态
+- **Zustand selector 对象引用陷阱**：`useAppStore((s) => s.ui)` 每次返回新对象引用，会导致组件无限重渲染。应拆分为原始值 selector：`useAppStore((s) => s.ui.showCompare)` 和 `useAppStore((s) => s.ui.compareMode)`
+- **事件处理器中优先使用 getState()**：快捷键等事件处理器若使用 `const undo = useAppStore((s) => s.undo)` selector，每次 store 变化都会触发 effect 重新订阅/清理。应在 handler 内部调用 `useAppStore.getState().undo()`，避免不必要的 effect 重运行
 
 ## Do-Not-Repeat
 
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
+
+[2026-05-25] 添加新参数到 UI 组件前，先更新 store 的类型定义。QuantizeModeSelector 和 ImageCanvas 引用 `params.quantizeMethod` 和 `params.maxColors` 时 TS 报错，因为 store 的 `params` 类型只定义了 `blockSize` 和 `algorithm`。修复：先在 `src/store/index.ts` 的 `AppState.params` 中添加新字段，再移除组件中的 `as` 类型断言。
+
+[2026-05-25] 多个组件（ExportButton、SplitView、SliderCompare）重复实现处理选项构建逻辑，导致与主画布不一致。应将所有处理参数统一从 store 读取，避免分散的逻辑副本。
+
+[2026-05-25] `createMask` 对 polygon/freehand 使用 Canvas `isPointInPath`，每像素调用一次 Canvas API，大图片性能极差。应使用纯 JS 射线法检测多边形包含关系，避免 Canvas 上下文切换开销。
 
 ## Key Learnings
 

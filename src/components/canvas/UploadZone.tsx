@@ -1,12 +1,14 @@
 import { useCallback } from 'react';
 import { useAppStore } from '../../store';
 import { loadImage } from '../../utils/image';
+import { createThumbnail } from '../../hooks/useThumbnail';
 
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 const MAX_SIZE = 20 * 1024 * 1024; // 20MB
 
 export function UploadZone() {
   const setOriginalImage = useAppStore((s) => s.setOriginalImage);
+  const setThumbnailImage = useAppStore((s) => s.setThumbnailImage);
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -22,11 +24,12 @@ export function UploadZone() {
       try {
         const img = await loadImage(file);
         setOriginalImage(img);
+        setThumbnailImage(createThumbnail(img));
       } catch {
         alert('图片加载失败');
       }
     },
-    [setOriginalImage]
+    [setOriginalImage, setThumbnailImage]
   );
 
   const handleDrop = useCallback(
@@ -54,7 +57,7 @@ export function UploadZone() {
       onClick={handleClick}
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
-      className="w-80 h-64 border-2 border-dashed border-retro-border rounded-sm flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-retro-primary transition-colors"
+      className="w-80 h-64 border-2 border-dashed border-retro-border rounded-sm flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-retro-primary hover:shadow-[0_0_8px_rgba(34,197,94,0.3)] transition-colors"
     >
       <div className="w-16 h-16 border-2 border-retro-border rounded-sm flex items-center justify-center">
         <span className="text-retro-primary text-3xl font-pixel">+</span>

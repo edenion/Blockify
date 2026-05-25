@@ -1,4 +1,4 @@
-import type { Shape } from './shapes';
+import type { Point, Shape } from './shapes';
 
 export function createMask(shape: Shape, width: number, height: number, invert: boolean): Uint8Array {
   const mask = new Uint8Array(width * height);
@@ -14,6 +14,18 @@ export function createMask(shape: Shape, width: number, height: number, invert: 
   return mask;
 }
 
+function isPointInPolygon(x: number, y: number, points: Point[]): boolean {
+  let inside = false;
+  for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+    const xi = points[i].x, yi = points[i].y;
+    const xj = points[j].x, yj = points[j].y;
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
 function isPointInShape(x: number, y: number, shape: Shape): boolean {
   switch (shape.type) {
     case 'rectangle':
@@ -24,6 +36,10 @@ function isPointInShape(x: number, y: number, shape: Shape): boolean {
       const dy = y - shape.cy;
       return dx * dx + dy * dy <= shape.radius * shape.radius;
     }
+    case 'polygon':
+      return isPointInPolygon(x, y, shape.points);
+    case 'freehand':
+      return isPointInPolygon(x, y, shape.path);
   }
 }
 

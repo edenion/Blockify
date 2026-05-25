@@ -5,16 +5,10 @@ export function TitleBar() {
       <span className="text-retro-primary font-pixel text-xs tracking-wider">
         PIXEL_ART.EXE
       </span>
-      <div className="ml-auto flex gap-2">
-        <button className="w-5 h-5 border border-retro-border text-retro-muted hover:text-retro-text hover:border-retro-primary text-xs flex items-center justify-center transition-colors">
-          ─
-        </button>
-        <button className="w-5 h-5 border border-retro-border text-retro-muted hover:text-retro-text hover:border-retro-primary text-xs flex items-center justify-center transition-colors">
-          □
-        </button>
-        <button className="w-5 h-5 border border-retro-border text-retro-muted hover:text-retro-danger hover:border-retro-danger text-xs flex items-center justify-center transition-colors">
-          ✕
-        </button>
+      <div className="ml-auto flex gap-2" aria-hidden="true">
+        <span className="w-5 h-5 border border-retro-border text-retro-muted text-xs flex items-center justify-center">─</span>
+        <span className="w-5 h-5 border border-retro-border text-retro-muted text-xs flex items-center justify-center">□</span>
+        <span className="w-5 h-5 border border-retro-border text-retro-muted text-xs flex items-center justify-center">✕</span>
       </div>
     </div>
   );

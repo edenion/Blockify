@@ -4,16 +4,19 @@ import type { QuantizeMethod } from '../../engine/types';
 export function QuantizeModeSelector() {
   const params = useAppStore((s) => s.params);
   const setParams = useAppStore((s) => s.setParams);
+  const saveSnapshot = useAppStore((s) => s.saveSnapshot);
 
   const method = params.quantizeMethod;
   const maxColors = params.maxColors;
 
   const handleMethodChange = (newMethod: QuantizeMethod) => {
     setParams({ quantizeMethod: newMethod, maxColors });
+    saveSnapshot();
   };
 
   const handleMaxColorsChange = (value: number) => {
     setParams({ maxColors: value });
+    saveSnapshot();
   };
 
   return (
@@ -54,6 +57,11 @@ export function QuantizeModeSelector() {
               [&::-webkit-slider-thumb]:cursor-pointer"
           />
         </div>
+      )}
+      {method === 'fixed-palette' && (
+        <p className="text-[10px] font-terminal text-retro-muted">
+          使用当前预设或自定义调色板中的颜色
+        </p>
       )}
     </div>
   );

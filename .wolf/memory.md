@@ -221,3 +221,81 @@
 | 13:40 | Edited src/store/index.ts | 4→6 lines | ~36 |
 | 13:40 | Edited src/components/params/QuantizeModeSelector.tsx | 2→2 lines | ~22 |
 | 13:40 | Edited src/components/canvas/ImageCanvas.tsx | CSS: maxColors | ~69 |
+| 13:41 | 修复 Phase 1 代码审查 5 个关键问题 | PresetSelector.tsx, BlockSizeSlider.tsx, QuantizeModeSelector.tsx, ParamsPanel.tsx, ImageCanvas.tsx, SelectionOverlay.tsx, index.css, store/index.ts | 预设同步+滑块防抖+量化UI+选区删除+CSS顺序，全部修复，build通过，22 tests pass | ~1200 |
+| 13:46 | Session end: 103 writes across 62 files (ui-style.html, waiting.html, 2026-05-25-pixel-art-studio-design.md, .gitignore, README.md) | 83 reads | ~111931 tok |
+| 13:49 | Session end: 103 writes across 62 files (ui-style.html, waiting.html, 2026-05-25-pixel-art-studio-design.md, .gitignore, README.md) | 83 reads | ~111931 tok |
+| 13:52 | Edited README.md | 6→6 lines | ~65 |
+| 13:55 | Edited README.md | 8→8 lines | ~25 |
+| 13:56 | Edited README.md | inline fix | ~19 |
+
+## Session: 2026-05-25 13:58
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-25 14:02
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 14:17 | Created docs/plans/2026-05-25-像素风图片转换-phase2.md | — | ~26514 |
+| 14:18 | Session end: 1 writes across 1 files (2026-05-25-像素风图片转换-phase2.md) | 10 reads | ~59287 tok |
+| 14:21 | Edited src/engine/selection/shapes.ts | modified createRectangle() | ~358 |
+| 14:22 | Created tests/engine/selection/shapes.test.ts | — | ~502 |
+| 14:22 | 扩展 Shape 类型支持多边形和自由手绘 | src/engine/selection/shapes.ts, tests/engine/selection/shapes.test.ts | 5 tests PASS | ~300 tok |
+| 14:25 | Edited src/engine/selection/mask.ts | added 3 condition(s) | ~521 |
+| 14:25 | Created tests/engine/selection/mask.test.ts | — | ~881 |
+| 14:25 | Edited tests/engine/selection/mask.test.ts | 3→3 lines | ~26 |
+| 14:26 | 扩展 mask.ts 支持 polygon/freehand，创建 mask.test.ts，全部 32 测试通过 | mask.ts, mask.test.ts | PASS | ~800 |
+| 14:27 | Edited src/engine/selection/mask.ts | 5→5 lines | ~42 |
+| 14:30 | Edited src/App.tsx | inline fix | ~24 |
+| 14:30 | Edited src/components/toolbar/Toolbar.tsx | modified Toolbar() | ~412 |
+| 14:31 | Created src/components/canvas/SelectionOverlay.tsx | — | ~2641 |
+| 14:31 | Edited src/components/canvas/SelectionOverlay.tsx | 2→1 lines | ~19 |
+| 14:32 | Edited src/components/canvas/SelectionOverlay.tsx | 1→2 lines | ~38 |
+| 14:32 | Edited src/components/canvas/SelectionOverlay.tsx | 2→2 lines | ~34 |
+| 14:35 | Edited src/store/index.ts | expanded (+14 lines) | ~336 |
+| 14:35 | Created src/components/params/MaskInvertToggle.tsx | — | ~266 |
+| 14:35 | Edited src/components/canvas/ImageCanvas.tsx | 5→6 lines | ~97 |
+| 14:35 | Edited src/components/canvas/ImageCanvas.tsx | modified if() | ~48 |
+| 14:35 | Edited src/components/canvas/ImageCanvas.tsx | inline fix | ~21 |
+| 14:36 | Edited src/components/params/ParamsPanel.tsx | added 1 import(s) | ~91 |
+| 14:36 | Edited src/components/params/ParamsPanel.tsx | 3→4 lines | ~31 |
+| 14:39 | Edited src/store/index.ts | 41→46 lines | ~316 |
+| 14:39 | Edited src/store/index.ts | expanded (+13 lines) | ~126 |
+| 14:40 | Created src/components/params/CustomPaletteEditor.tsx | — | ~728 |
+| 14:40 | Edited src/components/canvas/ImageCanvas.tsx | 4→5 lines | ~84 |
+| 14:40 | Edited src/components/canvas/ImageCanvas.tsx | CSS: method, palette | ~156 |
+| 14:40 | Edited src/components/canvas/ImageCanvas.tsx | inline fix | ~25 |
+| 14:40 | Edited src/components/params/ParamsPanel.tsx | added 1 import(s) | ~108 |
+| 14:40 | Edited src/components/params/ParamsPanel.tsx | 2→3 lines | ~24 |
+| 14:41 | 实现自定义调色板编辑器 | src/store/index.ts, src/components/params/CustomPaletteEditor.tsx, src/components/canvas/ImageCanvas.tsx, src/components/params/ParamsPanel.tsx | 完成，32 tests pass, tsc clean | ~tokens |
+| 14:43 | Created src/store/storage.ts | — | ~170 |
+| 14:44 | Created src/store/index.ts | — | ~892 |
+| 14:44 | Created src/components/params/CustomPresetManager.tsx | — | ~1474 |
+| 14:45 | Created src/components/params/PresetSelector.tsx | — | ~1215 |
+| 14:45 | Created src/components/params/ParamsPanel.tsx | — | ~729 |
+| 14:45 | TypeScript 编译检查 | 全项目 | 无错误通过 | ~50 |
+| 14:45 | 运行测试套件 | 全部 9 个测试文件 | 32 tests passed，无回归 | ~100 |
+| 14:46 | 提交 Task 6 | storage.ts, store/index.ts, CustomPresetManager.tsx, PresetSelector.tsx, ParamsPanel.tsx | feat: 实现自定义预设保存/加载/删除（localStorage 持久化） | ~200 |
+| 14:48 | Created src/engine/person/normal.ts | — | ~64 |
+| 14:48 | Edited src/store/index.ts | 3→4 lines | ~43 |
+| 14:48 | Edited src/store/index.ts | 4→8 lines | ~54 |
+| 14:48 | Edited src/store/index.ts | 3→6 lines | ~50 |
+| 14:48 | Created src/components/params/PersonModeSelector.tsx | — | ~466 |
+| 14:48 | Edited src/components/canvas/ImageCanvas.tsx | added 1 import(s) | ~181 |
+| 14:49 | Edited src/components/canvas/ImageCanvas.tsx | 2→3 lines | ~49 |
+| 14:49 | Edited src/components/canvas/ImageCanvas.tsx | CSS: result | ~138 |
+| 14:49 | Edited src/components/canvas/ImageCanvas.tsx | inline fix | ~29 |
+| 14:49 | Edited src/components/params/ParamsPanel.tsx | added 1 import(s) | ~68 |
+| 14:49 | Edited src/components/params/ParamsPanel.tsx | 4→5 lines | ~40 |
+| 14:49 | TypeScript 编译检查 | 全项目 | 无错误通过 | ~50 |
+| 14:49 | 运行测试套件 | 全部 9 个测试文件 | 32 tests passed，无回归 | ~100 |
+| 14:50 | 提交 Task 7 | normal.ts, store/index.ts, PersonModeSelector.tsx, ImageCanvas.tsx, ParamsPanel.tsx | feat: 实现人物像素风 Normal 模式 + 模式选择器 | ~200 |
+| 14:54 | Created src/engine/person/cutout.ts | — | ~833 |
+| 14:54 | Edited src/store/index.ts | expanded (+6 lines) | ~109 |
+| 14:54 | Edited src/store/index.ts | 6→11 lines | ~94 |
+| 14:55 | Edited src/components/params/PersonModeSelector.tsx | modified PersonModeSelector() | ~961 |
+| 14:56 | Edited src/components/canvas/ImageCanvas.tsx | added 1 condition(s) | ~1123 |
+| 14:56 | Edited src/engine/person/cutout.ts | modified if() | ~48 |
+| 14:56 | Edited src/engine/person/cutout.ts | inline fix | ~11 |
+| 14:57 | Edited src/engine/person/cutout.ts | reduced (-7 lines) | ~112 |

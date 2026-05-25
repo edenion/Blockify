@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { useAppStore } from '../../store';
 import { BlockSizeSlider } from './BlockSizeSlider';
 import { AlgorithmToggle } from './AlgorithmToggle';
 import { PresetSelector } from './PresetSelector';
 import { QuantizeModeSelector } from './QuantizeModeSelector';
+import { MaskInvertToggle } from './MaskInvertToggle';
+import { PersonModeSelector } from './PersonModeSelector';
+import { CustomPaletteEditor } from './CustomPaletteEditor';
+import { CustomPresetManager } from './CustomPresetManager';
 
 function CompareControl() {
   const { showCompare, compareMode } = useAppStore((s) => s.ui);
@@ -51,15 +56,64 @@ function CompareControl() {
   );
 }
 
-export function ParamsPanel() {
+function PanelContent() {
   return (
-    <div className="w-64 bg-retro-panel border-l-2 border-retro-border p-4 space-y-6 overflow-y-auto">
+    <>
       <h2 className="text-retro-primary text-xs font-pixel mb-4">PARAMETERS</h2>
       <BlockSizeSlider />
       <AlgorithmToggle />
       <QuantizeModeSelector />
       <PresetSelector />
+      <CustomPresetManager />
+      <MaskInvertToggle />
+      <PersonModeSelector />
+      <CustomPaletteEditor />
       <CompareControl />
-    </div>
+    </>
+  );
+}
+
+export function ParamsPanel() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <div className="hidden md:block w-64 bg-retro-panel border-l-2 border-retro-border p-4 space-y-6 overflow-y-auto">
+        <PanelContent />
+      </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="fixed right-0 top-0 bottom-0 w-64 bg-retro-panel border-l-2 border-retro-border p-4 space-y-6 overflow-y-auto z-50 md:hidden">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-retro-primary text-xs font-pixel">PARAMETERS</h2>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="text-retro-muted hover:text-retro-text text-lg leading-none"
+                aria-label="关闭"
+              >
+                ×
+              </button>
+            </div>
+            <PanelContent />
+          </div>
+        </>
+      )}
+
+      {/* Mobile toggle button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="fixed bottom-4 right-4 w-12 h-12 bg-retro-panel border-2 border-retro-border rounded-sm flex items-center justify-center text-retro-primary text-lg font-pixel shadow-lg md:hidden z-30 hover:border-retro-primary transition-colors"
+        aria-label="打开参数面板"
+      >
+        ⚙
+      </button>
+    </>
   );
 }

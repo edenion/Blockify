@@ -11,7 +11,8 @@ interface CanvasViewportProps {
 
 export function CanvasViewport({ selectionTool }: CanvasViewportProps) {
   const originalImage = useAppStore((s) => s.originalImage);
-  const { showCompare, compareMode } = useAppStore((s) => s.ui);
+  const showCompare = useAppStore((s) => s.ui.showCompare);
+  const compareMode = useAppStore((s) => s.ui.compareMode);
 
   if (!originalImage) {
     return (
