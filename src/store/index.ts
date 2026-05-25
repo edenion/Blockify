@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { QuantizeMethod } from '../engine/types';
 
 export type Algorithm = 'nearest' | 'average';
 
@@ -11,6 +12,8 @@ export interface AppState {
   params: {
     blockSize: number;
     algorithm: Algorithm;
+    quantizeMethod: QuantizeMethod;
+    maxColors: number;
   };
   setParams: (params: Partial<AppState['params']>) => void;
 
@@ -38,6 +41,8 @@ export const useAppStore = create<AppState>((set) => ({
   params: {
     blockSize: 8,
     algorithm: 'nearest',
+    quantizeMethod: 'none' as QuantizeMethod,
+    maxColors: 16,
   },
   setParams: (newParams) =>
     set((state) => ({

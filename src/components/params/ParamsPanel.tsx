@@ -2,6 +2,7 @@ import { useAppStore } from '../../store';
 import { BlockSizeSlider } from './BlockSizeSlider';
 import { AlgorithmToggle } from './AlgorithmToggle';
 import { PresetSelector } from './PresetSelector';
+import { QuantizeModeSelector } from './QuantizeModeSelector';
 
 function CompareControl() {
   const { showCompare, compareMode } = useAppStore((s) => s.ui);
@@ -56,6 +57,7 @@ export function ParamsPanel() {
       <h2 className="text-retro-primary text-xs font-pixel mb-4">PARAMETERS</h2>
       <BlockSizeSlider />
       <AlgorithmToggle />
+      <QuantizeModeSelector />
       <PresetSelector />
       <CompareControl />
     </div>

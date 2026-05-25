@@ -26,11 +26,20 @@
 - **精灵图模式**：用户上传多张照片（正面/侧面/背面），统一像素化后拼接为 Sprite Sheet
 - **裁剪与框选**：可独立使用，无强制顺序
 - **自定义框选**：同时支持多边形点选和自由手绘路径
+- **框选遮罩实现**：选区内应用像素化、选区外保持原图，通过 `Uint8Array` 掩码 + `applyMask(source, processed, mask)` 混合两张 ImageData 实现；掩码在 `requestAnimationFrame` 中同步计算，无异步延迟
 
 ## Do-Not-Repeat
 
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
+
+## Key Learnings
+
+- **Testing ImageData in Node.js**: jsdom does not provide `ImageData` global. Must install `canvas` package (`npm install -D canvas`) and polyfill in `tests/setup.ts`: `import { ImageData } from 'canvas'; global.ImageData = ImageData;`
+- **降采样算法设计**: 输出 ImageData 保持与输入相同尺寸，每个 block 内所有像素取同一颜色（nearest=center pixel, average=mean），形成像素块视觉效果
+- **颜色量化算法设计**: `none` 返回原图副本；`fixed-palette` 用欧氏距离映射到最近调色板颜色；`median-cut` 使用贪心算法选取散布在色彩空间中的代表色（简化版，可后续优化为真正的中位切分算法）
+- **测试文件导入路径**: tests/utils/color.test.ts 位于 tests/utils/，导入 src/utils/color.ts 应使用 `../../src/utils/color` 而非 `../../../src/utils/color`（后者会解析到项目根目录之外）
+- **Zustand getState() 快照引用陷阱**: `const store = useAppStore.getState()` 获取的是调用时刻的状态快照，后续 `set()` 不会更新该引用。测试中每次操作后应重新调用 `getState()` 获取最新状态，否则断言会拿到旧值
 
 ## Decision Log
 

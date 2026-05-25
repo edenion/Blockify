@@ -34,7 +34,10 @@ export function ImageCanvas({ selectionTool }: ImageCanvasProps) {
 
       let options: ProcessOptions = {
         downsample: { blockSize: params.blockSize, algorithm: params.algorithm },
-        quantize: { method: 'none' },
+        quantize: {
+          method: params.quantizeMethod,
+          maxColors: params.maxColors,
+        },
       };
 
       if (presetId) {

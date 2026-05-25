@@ -92,6 +92,26 @@ export function SelectionOverlay({ width, height, tool, onShapeCreated }: Select
     onShapeCreated(null);
   }, [tool, onShapeCreated]);
 
+  // Keyboard handler for Delete/Backspace to clear selection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        const canvas = canvasRef.current;
+        if (canvas) {
+          const ctx = canvas.getContext('2d')!;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        setCurrentShape(null);
+        onShapeCreated(null);
+      }
+    };
+
+    if (tool) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [tool, onShapeCreated]);
+
   if (!tool) return null;
 
   return (

@@ -6,12 +6,24 @@ const registry = createPresetRegistry();
 export function PresetSelector() {
   const presetId = useAppStore((s) => s.presetId);
   const setPresetId = useAppStore((s) => s.setPresetId);
+  const setParams = useAppStore((s) => s.setParams);
 
   const hardwarePresets = registry.getByCategory('hardware');
   const themePresets = registry.getByCategory('theme');
 
   const handleSelect = (id: string) => {
-    setPresetId(presetId === id ? null : id);
+    if (presetId === id) {
+      setPresetId(null);
+      return;
+    }
+    const preset = registry.get(id);
+    if (preset) {
+      setParams({
+        blockSize: preset.config.downsample.blockSize,
+        algorithm: preset.config.downsample.algorithm,
+      });
+    }
+    setPresetId(id);
   };
 
   return (

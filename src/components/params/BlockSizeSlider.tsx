@@ -1,21 +1,34 @@
+import { useState, useEffect } from 'react';
 import { useAppStore } from '../../store';
 
 export function BlockSizeSlider() {
   const blockSize = useAppStore((s) => s.params.blockSize);
   const setParams = useAppStore((s) => s.setParams);
+  const [localValue, setLocalValue] = useState(blockSize);
+
+  useEffect(() => {
+    setLocalValue(blockSize);
+  }, [blockSize]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setParams({ blockSize: localValue });
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [localValue, setParams]);
 
   return (
     <div className="space-y-2">
       <label className="text-retro-muted text-xs font-pixel flex justify-between">
         <span>像素块大小</span>
-        <span className="text-retro-primary">{blockSize}px</span>
+        <span className="text-retro-primary">{localValue}px</span>
       </label>
       <input
         type="range"
         min={2}
         max={64}
-        value={blockSize}
-        onChange={(e) => setParams({ blockSize: Number(e.target.value) })}
+        value={localValue}
+        onChange={(e) => setLocalValue(Number(e.target.value))}
         className="w-full h-2 bg-retro-border appearance-none cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:w-3
