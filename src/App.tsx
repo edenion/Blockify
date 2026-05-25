@@ -1,8 +1,15 @@
+import { Layout } from './components/layout/Layout';
+import { Toolbar } from './components/toolbar/Toolbar';
+import { CanvasViewport } from './components/canvas/CanvasViewport';
+import { ParamsPanel } from './components/params/ParamsPanel';
+
 function App() {
   return (
-    <div className="min-h-screen bg-retro-bg flex items-center justify-center">
-      <h1 className="font-pixel text-retro-primary text-xl">PixelArt Studio</h1>
-    </div>
+    <Layout>
+      <Toolbar />
+      <CanvasViewport />
+      <ParamsPanel />
+    </Layout>
   );
 }
 
