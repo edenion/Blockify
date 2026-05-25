@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+@layer base {
+  body {
+    @apply bg-retro-bg text-retro-text;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+}
